@@ -1,7 +1,7 @@
 import "package:flutter/services.dart" show rootBundle;
-import "nima/actor.dart";
-import "nima/actor_image.dart";
-import "nima/actor_component.dart";
+import "actor.dart";
+import "actor_image.dart";
+import "actor_component.dart";
 import "dart:async";
 import "dart:typed_data";
 import "dart:ui" as ui;
