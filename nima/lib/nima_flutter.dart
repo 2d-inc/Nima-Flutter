@@ -100,12 +100,13 @@ class FlutterActorImage extends ActorImage
 
 	draw(ui.Canvas canvas)
 	{
-		if(triangles == null || this.renderCollapsed || opacity <= 0)
+		if(triangles == null || this.renderCollapsed || opacity <= 0 || _canvasVertices == null)
 		{
 			return;
 		}
 		int alpha = (this.renderOpacity * 255).toInt();
 		_paint.color = _paint.color.withAlpha(alpha);
+		_paint.isAntiAlias = true;
 		canvas.drawVertices(_canvasVertices, ui.BlendMode.srcOver, _paint);
 	}
 
