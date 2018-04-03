@@ -1,5 +1,3 @@
-import "dart:collection";
-
 class PropertyTypes 
 {
 	static const int Unknown = 0;
