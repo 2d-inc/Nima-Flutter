@@ -7,6 +7,7 @@ import "actor_bone.dart";
 import "math/vec2d.dart";
 import "math/mat2d.dart";
 import "dart:math";
+import "actor_root_bone.dart";
 
 class JellyComponent extends ActorComponent
 {
@@ -263,8 +264,12 @@ class JellyComponent extends ActorComponent
 	void update(int dirt) 
 	{
 		ActorBone bone = parent as ActorBone;
-		ActorBone parentBone = bone.parent as ActorBone;
-		JellyComponent parentBoneJelly = parentBone == null ? null : parentBone.jelly;
+		ActorNode parentBone = bone.parent;
+		JellyComponent parentBoneJelly;
+		if(parentBone is ActorBone)
+		{
+			parentBoneJelly = parentBone.jelly;
+		}
 
 		Mat2D inverseWorld = new Mat2D();
 		if(!Mat2D.invert(inverseWorld, bone.worldTransform))
@@ -280,7 +285,16 @@ class JellyComponent extends ActorComponent
 		}
 		else if(parentBone != null)
 		{
-			if(parentBone.firstBone == bone && parentBoneJelly != null && parentBoneJelly._outTarget != null)
+			ActorBone firstBone;
+			if(parentBone is ActorBone)
+			{
+				firstBone = parentBone.firstBone;
+			}
+			else if(parentBone is ActorRootBone)
+			{
+				firstBone = parentBone.firstBone;
+			}
+			if(firstBone == bone && parentBoneJelly != null && parentBoneJelly._outTarget != null)
 			{
 				Vec2D translation = parentBoneJelly._outTarget.getWorldTranslation(new Vec2D());
 				Vec2D localParentOut = Vec2D.transformMat2D(new Vec2D(), translation, inverseWorld);

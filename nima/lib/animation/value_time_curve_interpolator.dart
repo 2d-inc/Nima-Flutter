@@ -9,7 +9,7 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 	double _inValue;
 	double _outFactor;
 	double _outValue;
-
+	
 	bool setNextFrame(KeyFrameWithInterpolation frame, KeyFrame nextFrame)
 	{
 		// This frame is a hold, return false to remove the interpolator.
@@ -38,11 +38,11 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 		double nextInFactor = 0.0;
 
 		// Get the invalue and infactor from the next interpolator (this is where hold keyframes get their interpolator values processed too).
-		if((nextInterpolator = next.interpolator as ValueTimeCurveInterpolator) != null)
+		if(next.interpolator is ValueTimeCurveInterpolator)
 		{
+			nextInterpolator = next.interpolator;
 			nextInValue = nextInterpolator._inValue;
 			nextInFactor = nextInterpolator._inFactor;
-			//this._Curve = new BezierAnimationCurve([this._Time, this._Value], [outTime, this._OutValue], [inTime, nxt._InValue], [nxt._Time, nxt._Value]);
 		}
 		else
 		{
@@ -53,6 +53,7 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 		double inTime = next.time - timeRange * nextInFactor;
 
 		// Finally we can generate the curve.
+
 		initializeCurve(ourFrame.time, ourFrame.value, outTime, _outValue, inTime, nextInValue, next.time, next.value);
 		//this._Curve = new BezierAnimationCurve([ourFrame.time, ourFrame.Value], [outTime, _outValue], [inTime, nextInValue], [next.time, next.Value]);
 		return true;
@@ -136,7 +137,9 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 		if (a.abs() < EPSILON)
 		{
 			// Quadratic case, ax^2+bx+c=0
-			a = b; b = c; c = d;
+			a = b; 
+			b = c; 
+			c = d;
 			if (a.abs() < EPSILON)
 			{
 				// Linear case, ax+b=0
@@ -181,7 +184,7 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 			{
 				// p = 0 -> t^3 = -q -> t = -q^1/3
 				roots[0] = cubicRoot(-q);
-				numRoots = 0;
+				numRoots = 1;
 			}
 			else if (q.abs() < EPSILON)
 			{
