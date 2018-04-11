@@ -587,6 +587,7 @@ class KeyFrameDrawOrder extends KeyFrame
 				actorImage.drawOrder = doi.order;
 			}
 		}
+		actor.markImageDrawOrderDirty();
 	}
 }
 
