@@ -27,6 +27,7 @@ class FlutterActorImage extends ActorImage
 		if(this.textureIndex != value)
 		{
 			_paint = new ui.Paint()..shader = new ui.ImageShader((actor as FlutterActor).images[textureIndex], ui.TileMode.clamp, ui.TileMode.clamp, _identityMatrix);
+			_paint.filterQuality = ui.FilterQuality.high;
 			_paint.isAntiAlias = true;
 		}
 	}
@@ -63,6 +64,7 @@ class FlutterActorImage extends ActorImage
 		}
 
 		_paint = new ui.Paint()..shader = new ui.ImageShader((actor as FlutterActor).images[textureIndex], ui.TileMode.clamp, ui.TileMode.clamp, _identityMatrix);
+		_paint.filterQuality = ui.FilterQuality.high;
 		_paint.isAntiAlias = true;
 
 	}
@@ -120,7 +122,6 @@ class FlutterActorImage extends ActorImage
 	AABB computeAABB()
 	{
 		this.updateVertices();
-		int nv = (this._vertexBuffer.length / 2).toInt();
 		
 		double min_x = double.infinity;
 		double min_y = double.infinity;
@@ -128,26 +129,30 @@ class FlutterActorImage extends ActorImage
 		double max_y = double.negativeInfinity;
 
 		int readIdx = 0;
-
-		for(int i = 0; i < nv; i++)
+		if(_vertexBuffer != null)
 		{
-			double x = _vertexBuffer[readIdx++];
-			double y = _vertexBuffer[readIdx++];
-			if(x < min_x)
+			int nv = _vertexBuffer.length ~/ 2;
+
+			for(int i = 0; i < nv; i++)
 			{
-				min_x = x;
-			}
-			if(y < min_y)
-			{
-				min_y = y;
-			}
-			if(x > max_x)
-			{
-				max_x = x;
-			}
-			if(y > max_y)
-			{
-				max_y = y;
+				double x = _vertexBuffer[readIdx++];
+				double y = _vertexBuffer[readIdx++];
+				if(x < min_x)
+				{
+					min_x = x;
+				}
+				if(y < min_y)
+				{
+					min_y = y;
+				}
+				if(x > max_x)
+				{
+					max_x = x;
+				}
+				if(y > max_y)
+				{
+					max_y = y;
+				}
 			}
 		}
 
