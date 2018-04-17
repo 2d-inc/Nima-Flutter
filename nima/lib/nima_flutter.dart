@@ -7,6 +7,8 @@ import "dart:typed_data";
 import "dart:ui" as ui;
 import "package:AABB/AABB.dart";
 
+typedef void DrawCallback(ui.Canvas canvas);
+
 class FlutterActorImage extends ActorImage
 {
 	Float32List _vertexBuffer;
@@ -14,6 +16,7 @@ class FlutterActorImage extends ActorImage
 	ui.Paint _paint;
 	ui.Vertices _canvasVertices;
 	Int32List _indices;
+	DrawCallback onDraw;
 
 	final Float64List _identityMatrix = new Float64List.fromList(<double>[
 			1.0, 0.0, 0.0, 0.0,
@@ -110,6 +113,10 @@ class FlutterActorImage extends ActorImage
 		_paint.color = _paint.color.withAlpha(alpha);
 		_paint.isAntiAlias = true;
 		canvas.drawVertices(_canvasVertices, ui.BlendMode.srcOver, _paint);
+		if(onDraw != null)
+		{
+			onDraw(canvas);
+		}
 	}
 
 	ActorComponent makeInstance(Actor resetActor)

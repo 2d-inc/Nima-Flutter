@@ -221,7 +221,7 @@ class Actor
 	{
 		for(ActorNode node in _nodes)
 		{
-			if(node.name == name)
+			if(node != null && node.name == name)
 			{
 				return node;
 			}
