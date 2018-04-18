@@ -16,8 +16,8 @@ class ActorRotationConstraint extends ActorTargetedConstraint
 	double _scale = 1.0;
 	bool _enableMin = false;
 	bool _enableMax = false;
-	double _max = 0.0;
-	double _min = 0.0;
+	double _max = PI2;
+	double _min = -PI2;
 	bool _offset = false;
 	int _sourceSpace = TransformSpace.World;
 	int _destSpace = TransformSpace.World;
@@ -32,30 +32,18 @@ class ActorRotationConstraint extends ActorTargetedConstraint
 			component = new ActorRotationConstraint();
 		}
 		ActorTargetedConstraint.read(actor, reader, component);
-		// component._invertDirection = reader.readUint8() == 1;
-			
-		// int numInfluencedBones = reader.readUint8();
-		// if(numInfluencedBones > 0)
-		// {
-		// 	component._influencedBones = new List<InfluencedBone>(numInfluencedBones);
-
-		// 	for(int i = 0; i < numInfluencedBones; i++)
-		// 	{
-		// 		InfluencedBone ib = new InfluencedBone();
-		// 		ib.boneIdx = reader.readUint16();
-		// 		component._influencedBones[i] = ib;
-		// 	}
-		// }
-
-		if((component._copy = reader.readUint8() == 1))
+		component._copy = reader.readUint8() == 1;
+		if(component._copy)
 		{
 			component._scale = reader.readFloat32();
 		}
-		if((component._enableMin = reader.readUint8() == 1))
+		component._enableMin = reader.readUint8() == 1;
+		if(component._enableMin)
 		{
 			component._min = reader.readFloat32();
 		}
-		if((component._enableMax = reader.readUint8() == 1))
+		component._enableMax = reader.readUint8() == 1;
+		if(component._enableMax)
 		{
 			component._max = reader.readFloat32();
 		}
@@ -64,6 +52,7 @@ class ActorRotationConstraint extends ActorTargetedConstraint
 		component._sourceSpace = reader.readUint8();
 		component._destSpace = reader.readUint8();
 		component._minMaxSpace = reader.readUint8();
+
 		
 		return component;
 	}
