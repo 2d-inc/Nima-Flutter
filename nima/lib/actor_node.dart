@@ -299,10 +299,10 @@ class ActorNode extends ActorComponent
 	void copyNode(ActorNode node, Actor resetActor)
 	{
 		copyComponent(node, resetActor);
-		_transform = new Mat2D.clone(node._transform);
-		_worldTransform = new Mat2D.clone(node._worldTransform);
-		_translation = new Vec2D.clone(node._translation);
-		_scale = new Vec2D.clone(node._scale);
+		Mat2D.copy(_transform, node._transform);
+		Mat2D.copy(_worldTransform, node._worldTransform);
+		Vec2D.copy(_translation, node._translation);
+		Vec2D.copy(_scale, node._scale);
 		_rotation = node._rotation;
 		_opacity = node._opacity;
 		_renderOpacity = node._renderOpacity;

@@ -242,7 +242,7 @@ class Actor
 	void copyActor(Actor actor)
 	{
 		_animations = actor._animations;
-		_flags = actor._flags;
+		//_flags = actor._flags;
 		_maxTextureIndex = actor._maxTextureIndex;
 		_imageNodeCount = actor._imageNodeCount;
 		_nodeCount = actor._nodeCount;
@@ -311,6 +311,15 @@ class Actor
 		}
 
 		sortDependencies();
+
+		if (_imageNodes != null)
+		{
+			_imageNodes.sort((a,b) => a.drawOrder.compareTo(b.drawOrder));
+			for(int i = 0; i < _imageNodes.length; i++)
+			{
+				_imageNodes[i].drawIndex = i;
+			}
+		}
 	}
 
 	void updateVertexDeform(ActorImage image) {}
