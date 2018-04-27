@@ -30,7 +30,7 @@ class FlutterActorImage extends ActorImage
 		if(this.textureIndex != value)
 		{
 			_paint = new ui.Paint()..shader = new ui.ImageShader((actor as FlutterActor).images[textureIndex], ui.TileMode.clamp, ui.TileMode.clamp, _identityMatrix);
-			_paint.filterQuality = ui.FilterQuality.high;
+			_paint.filterQuality = ui.FilterQuality.low;
 			_paint.isAntiAlias = true;
 		}
 	}
@@ -67,7 +67,7 @@ class FlutterActorImage extends ActorImage
 		}
 
 		_paint = new ui.Paint()..shader = new ui.ImageShader((actor as FlutterActor).images[textureIndex], ui.TileMode.clamp, ui.TileMode.clamp, _identityMatrix);
-		_paint.filterQuality = ui.FilterQuality.high;
+		_paint.filterQuality = ui.FilterQuality.low;
 		_paint.isAntiAlias = true;
 
 	}
