@@ -21,6 +21,15 @@ class Vec2D
 		_buffer[index] = value;
 	}
 
+    bool equals(Vec2D other)
+    {
+        if(other == null)
+        {
+            return false;
+        }
+        return _buffer[0] == other[0] && _buffer[1] == other[1];
+    }
+
 	Vec2D()
 	{
 		_buffer = new Float32List.fromList([0.0, 0.0]);
