@@ -35,6 +35,14 @@ class FlutterActorImage extends ActorImage
 		}
 	}
 
+    void dispose()
+    {
+        _uvBuffer.clear();
+        _vertexBuffer.clear();
+        _indices.clear();
+        _paint = null;
+    }
+
 	void init()
 	{
 		if(triangles == null)
@@ -247,12 +255,24 @@ class FlutterActor extends Actor
 		this._isInstance = true;
 	}
 
+    dispose()
+    {
+        for(FlutterActorImage img in imageNodes)
+        {
+            img.disposeGeometry();
+            if(!_isInstance)
+            {
+                img.disposeGeometry();
+            }
+        }
+    }
+
 	Actor makeInstance()
 	{
 		FlutterActor actorInstance = new FlutterActor();
 		actorInstance.copyActor(this);
 		actorInstance.isInstance = true;
-		actorInstance._images = new List.from(this._images);
+		actorInstance._images = this._images;
 		for(FlutterActorImage img in actorInstance.imageNodes)
 		{
 			img.init();

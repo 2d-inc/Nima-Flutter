@@ -142,6 +142,13 @@ class Vec2D
 		return a[0] == b[0] && a[1] == b[1];
 	}
 
+    static double squaredDistance(Vec2D a, Vec2D b)
+    {
+        double x = b[0] - a[0];
+        double y = b[1] - a[1];
+        return x*x + y*y;
+    }
+
 	@override
 	String toString()
 	{
