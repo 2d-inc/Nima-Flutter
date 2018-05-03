@@ -207,15 +207,15 @@ class Actor
 		return null;
 	}
 
-	// ActorAnimationInstance getAnimationInstance(String name)
-	// {
-	// 	ActorAnimation animation = getAnimation(name);
-	// 	if(animation == null)
-	// 	{
-	// 		return null;
-	// 	}
-	// 	return new ActorAnimationInstance(this, animation);
-	// }
+	ActorAnimationInstance getAnimationInstance(String name)
+	{
+		ActorAnimation animation = getAnimation(name);
+		if(animation == null)
+		{
+			return null;
+		}
+		return new ActorAnimationInstance(this, animation);
+	}
 
 	ActorNode getNode(String name)
 	{

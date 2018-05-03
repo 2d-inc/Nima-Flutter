@@ -470,141 +470,130 @@ class ActorAnimation
 	}
 }
 
-// class ActorAnimationInstance
-// {
-// 	Actor _actor;
-// 	ActorAnimation _animation;
-// 	double _time;
-// 	double _min;
-// 	double _max;
-// 	double _range;
-// 	bool loop;
+class ActorAnimationInstance
+{
+	Actor _actor;
+	ActorAnimation _animation;
+	double _time;
+	double _min;
+	double _max;
+	double _range;
+	bool _loop;
 
-// 			event EventHandler<AnimationEventArgs> AnimationEvent;
+	ActorAnimationInstance(Actor actor, ActorAnimation animation)
+	{
+		_actor = actor;
+		_animation = animation;
+		_time = 0.0;
+		_min = 0.0;
+		_max = animation.duration;
+		_range = _max - _min;
+		_loop = animation.isLooping;
+	}
 
-// 	ActorAnimationInstance(Actor actor, ActorAnimation animation)
-// 	{
-// 		_actor = actor;
-// 		_animation = animation;
-// 		_time = 0.0;
-// 		_min = 0.0;
-// 		_max = animation.Duration;
-// 		_range = _max - _min;
-// 		loop = animation.IsLooping;
-// 	}	
+	double get minTime => _min;
+	double get maxTime => _max;
+	double get time => _time;
+    bool get isOver => _time >= _max;
 
-// 	double get minTime
-// 	{
-// 		return _min;
-// 	}
+    void reset()
+    {
+        _time = 0.0;
+    }
 
-// 	double get maxTime
-// 	{
-// 		return _max;
-// 	}
-	
-// 	double get time
-// 	{
-// 		return _time;
-// 	}
+	set time(double value)
+	{
+		double delta = value - _time;
+		double time = _time + (delta % _range);
 
-// 	set time(double value)
-// 	{
-// 		double delta = value - _time;
-// 		double time = _time + (delta % _range);
+		if(time < _min)
+		{
+			if(_loop)
+			{
+				time = _max - (_min - time);	
+			}
+			else
+			{
+				time = _min;
+			}
+		}
+		else if(time > _max)
+		{
+			if(_loop)
+			{
+				time = _min + (time - _max);
+			}
+			else
+			{
+				time = _max;
+			}
+		}
+		_time = time;
+	}
 
-// 		if(time < _min)
-// 		{
-// 			if(loop)
-// 			{
-// 				time = _max - (_min - time);	
-// 			}
-// 			else
-// 			{
-// 				time = _min;
-// 			}
-// 		}
-// 		else if(time > _max)
-// 		{
-// 			if(loop)
-// 			{
-// 				time = _min + (time - _max);
-// 			}
-// 			else
-// 			{
-// 				time = _max;
-// 			}
-// 		}
-// 		_time = time;
-// 	}
+	List<AnimationEventArgs> advance(double seconds)
+	{
+		List<AnimationEventArgs> triggeredEvents = new List<AnimationEventArgs>();
+		double time = _time;
+		time += seconds % _range;
+		if(time < _min)
+		{
+			if(_loop)
+			{
+				_animation.triggerEvents(_actor.components, time, _time, triggeredEvents);
+				time = _max - (_min - time);
+				_animation.triggerEvents(_actor.components, time, _max, triggeredEvents);
+			}
+			else
+			{
+				time = _min;
+				if(_time != time)
+				{
+					_animation.triggerEvents(_actor.components, _min, _time, triggeredEvents);
+				}
+			}
+		}
+		else if(time > _max)
+		{
+			if(_loop)
+			{
+				_animation.triggerEvents(_actor.components, time, _time, triggeredEvents);
+				time = _min + (time - _max);
+				_animation.triggerEvents(_actor.components, _min-0.001, time, triggeredEvents);
+			}
+			else
+			{
+				time = _max;
+				if(_time != time)
+				{
+					_animation.triggerEvents(_actor.components, _time, _max, triggeredEvents);
+				}
+			}
+		}
+		else if(time > _time)
+		{
+			_animation.triggerEvents(_actor.components, _time, time, triggeredEvents);
+		}
+		else
+		{
+			_animation.triggerEvents(_actor.components, time, _time, triggeredEvents);
+		}
 
-// 	void advance(float seconds)
-// 	{
-// 		List<AnimationEventArgs> triggeredEvents = new List<AnimationEventArgs>();
-// 		float time = _time;
-// 		time += seconds % _range;
-// 		if(time < _min)
-// 		{
-// 			if(loop)
-// 			{
-// 				_animation.TriggerEvents(_actor.components, time, _time, triggeredEvents);
-// 				time = _max - (_min - time);
-// 				_animation.TriggerEvents(_actor.components, time, _max, triggeredEvents);
-// 			}
-// 			else
-// 			{
-// 				time = _min;
-// 				if(_time != time)
-// 				{
-// 					_animation.TriggerEvents(_actor.components, _min, _time, triggeredEvents);
-// 				}
-// 			}
-// 		}
-// 		else if(time > _max)
-// 		{
-// 			if(loop)
-// 			{
-// 				_animation.TriggerEvents(_actor.components, time, _time, triggeredEvents);
-// 				time = _min + (time - _max);
-// 				_animation.TriggerEvents(_actor.components, _min-0.001f, time, triggeredEvents);
-// 			}
-// 			else
-// 			{
-// 				time = _max;
-// 				if(_time != time)
-// 				{
-// 					_animation.TriggerEvents(_actor.components, _time, _max, triggeredEvents);
-// 				}
-// 			}
-// 		}
-// 		else if(time > _time)
-// 		{
-// 			_animation.TriggerEvents(_actor.components, _time, time, triggeredEvents);
-// 		}
-// 		else
-// 		{
-// 			_animation.TriggerEvents(_actor.components, time, _time, triggeredEvents);
-// 		}
+		// TODO:
+        // for(AnimationEventArgs ev in triggeredEvents)
+		// {
+        //     if (AnimationEvent != null)
+        //     {
+        //         AnimationEvent(this, ev);
+        //     }
+        //     _actor.onAnimationEvent(ev);
+		// }
+		_time = time;
+        return triggeredEvents;
+	}
 
-// 		for(AnimationEventArgs ev in triggeredEvents)
-// 		{
-// 						if (AnimationEvent != null)
-// 						{
-// 								AnimationEvent(this, ev);
-// 						}
-// 						_actor.OnAnimationEvent(ev);
-// 		}
-// 		/*for(var i = 0; i < triggeredEvents.length; i++)
-// 		{
-// 			var event = triggeredEvents[i];
-// 			this.dispatch("animationEvent", event);
-// 			_actor.dispatch("animationEvent", event);
-// 		}*/
-// 		_time = time;
-// 	}
-
-// 	void Apply(float mix)
-// 	{
-// 		_animation.apply(_time, _actor, mix);
-// 	}
-// }
+	void apply(double mix)
+	{
+		_animation.apply(_time, _actor, mix);
+	}
+}
