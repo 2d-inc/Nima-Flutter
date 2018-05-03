@@ -499,6 +499,16 @@ class ActorAnimationInstance
     void reset()
     {
         _time = 0.0;
+        advance(0.0);
+        apply(1.0);
+    }
+
+    set loop(bool shouldIt)
+    {
+        if(_loop != shouldIt)
+        {
+            _loop = shouldIt;
+        }
     }
 
 	set time(double value)

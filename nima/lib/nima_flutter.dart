@@ -37,9 +37,9 @@ class FlutterActorImage extends ActorImage
 
     void dispose()
     {
-        _uvBuffer.clear();
-        _vertexBuffer.clear();
-        _indices.clear();
+        _uvBuffer = null;
+        _vertexBuffer = null;
+        _indices = null;
         _paint = null;
     }
 
@@ -259,7 +259,7 @@ class FlutterActor extends Actor
     {
         for(FlutterActorImage img in imageNodes)
         {
-            img.disposeGeometry();
+            img.dispose();
             if(!_isInstance)
             {
                 img.disposeGeometry();
