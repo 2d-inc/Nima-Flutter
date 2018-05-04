@@ -1,3 +1,0 @@
-[submodule "Dependencies/AABB"]
-	path = Dependencies/AABB
-	url = git@github.com:2d-inc/Dart-AABB.git
