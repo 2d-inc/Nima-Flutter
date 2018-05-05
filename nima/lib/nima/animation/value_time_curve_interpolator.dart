@@ -9,6 +9,14 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 	double _inValue;
 	double _outFactor;
 	double _outValue;
+
+	double get inFactor => _inFactor;
+	double get inValue => _inValue;
+	double get outFactor => _outFactor;
+	double get outValue => _outValue;
+
+	ValueTimeCurveInterpolator.fromValues(this._inFactor, this._inValue, this._outFactor, this._outValue);
+	ValueTimeCurveInterpolator();
 	
 	bool setNextFrame(KeyFrameWithInterpolation frame, KeyFrame nextFrame)
 	{
@@ -84,7 +92,8 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 		return null;
 	}
 
-	static const double EPSILON = 1e-8;
+	static const double EPSILON = double.minPositive;
+	
 	double _x0;
 	double _y0;
 
@@ -102,8 +111,11 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 	double _g;
 	double _h;
 
+	static const double DEBUG_VALUE = 7.325263977050781;
+
 	void initializeCurve(double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3)
 	{
+		//ourFrame.time, ourFrame.value, outTime, _outValue, inTime, nextInValue, next.time, next.value
 		_x0 = x0;
 		_y0 = y0;
 
@@ -253,7 +265,7 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 		double c = 3.0 * p1 - 3.0 * p0;
 		double d = p0;
 
-		List<double> roots = new List<double>.filled(3, 0.0);//[3]{0.0, 0.0, 0.0};
+		List<double> roots = new List<double>.filled(3, -1.0);
 		int numRoots = solveCubic(a, b, c, d, roots);
 		double t = 0.0;
 		// Find first valid root.

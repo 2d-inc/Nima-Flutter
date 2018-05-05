@@ -145,34 +145,33 @@ abstract class KeyFrameNumeric extends KeyFrameWithInterpolation
 
 	void applyInterpolation(ActorComponent component, double time, KeyFrame toFrame, double mix)
 	{
-		switch(_interpolationType)
+		if(_interpolator != null && _interpolator is ValueTimeCurveInterpolator)
 		{
-			case InterpolationTypes.Mirrored:
-			case InterpolationTypes.Asymmetric:
-			case InterpolationTypes.Disconnected:
+			double v = (_interpolator as ValueTimeCurveInterpolator).get(time);
+			setValue(component, v, mix);
+		}
+		else
+		{
+			switch(_interpolationType)
 			{
-				ValueTimeCurveInterpolator interpolator = _interpolator as ValueTimeCurveInterpolator;
-				if(interpolator != null)
+				case InterpolationTypes.Hold:
 				{
-					double v = interpolator.get(time);
-					setValue(component, v, mix);
+					setValue(component, _value, mix);
+					break;
 				}
-				break;
-			}
 
-			case InterpolationTypes.Hold:
-			{
-				setValue(component, _value, mix);
-				break;
-			}
+				case InterpolationTypes.Linear:
+				{
+					KeyFrameNumeric to = toFrame as KeyFrameNumeric;
 
-			case InterpolationTypes.Linear:
-			{
-				KeyFrameNumeric to = toFrame as KeyFrameNumeric;
+					double f = (time - _time)/(to._time-_time);
+					setValue(component, _value * (1.0-f) + to._value * f, mix);
+					break;
+				}
 
-				double f = (time - _time)/(to._time-_time);
-				setValue(component, _value * (1.0-f) + to._value * f, mix);
-				break;
+				default:
+					// Not handled, interpolator must be a valuetimecuve or hold/linear.
+					break;
 			}
 		}
 	}
@@ -183,6 +182,19 @@ abstract class KeyFrameNumeric extends KeyFrameWithInterpolation
 	}
 
 	void setValue(ActorComponent component, double value, double mix);
+
+	@override
+	void setNext(KeyFrame frame)
+	{
+		// Special case where we are linear but the next frame has in curve values
+		if(frame != null && _interpolationType == InterpolationTypes.Linear && frame is KeyFrameWithInterpolation && frame.interpolator is ValueTimeCurveInterpolator)
+		{
+			// Linear cubic interpolator, so that we can set it up with the next frame.
+			_interpolator = new ValueTimeCurveInterpolator.fromValues(0.0, _value, 0.0, _value);
+		}
+
+		super.setNext(frame);
+	}
 }
 
 abstract class KeyFrameInt extends KeyFrameWithInterpolation
