@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
 		body: new Stack(
 			children: <Widget>[
 			  	new Positioned.fill(
-					child: NimaActor("assets/Hop", alignment:Alignment.center, fit:BoxFit.contain, animation:_animationName, completed:(String animationName)
+					child: NimaActor("assets/Hop", alignment:Alignment.center, fit:BoxFit.contain, animation:_animationName, mixSeconds:0.5, completed:(String animationName)
 					{
 						setState(()
 						{

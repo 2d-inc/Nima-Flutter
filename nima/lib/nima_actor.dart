@@ -14,10 +14,11 @@ class NimaActor extends LeafRenderObjectWidget
 	final BoxFit fit;
 	final Alignment alignment;
 	final String animation;
+	final double mixSeconds;
 	final bool paused;
 	final NimaAnimationCompleted completed;
 
-	NimaActor(this.filename, {this.animation, this.fit, this.alignment = Alignment.center, this.paused = false, this.completed});
+	NimaActor(this.filename, {this.animation, this.fit, this.mixSeconds = 0.2, this.alignment = Alignment.center, this.paused = false, this.completed});
 
 	@override
 	RenderObject createRenderObject(BuildContext context) 
@@ -27,6 +28,7 @@ class NimaActor extends LeafRenderObjectWidget
 											..alignment = alignment
 											..animationName = animation
 											..completed = completed
+											..mixSeconds = mixSeconds
 											..isPlaying = !paused && animation != null;
 	}
 
@@ -38,6 +40,7 @@ class NimaActor extends LeafRenderObjectWidget
 											..alignment = alignment
 											..animationName = animation
 											..completed = completed
+											..mixSeconds = mixSeconds
 											..isPlaying = !paused && animation != null;
 	}
 }
@@ -128,6 +131,16 @@ class NimaActorRenderObject extends RenderBox
 												..mix = 0.0);
 	}
 
+	double get mixSeconds => _mixSeconds;
+	set mixSeconds(double seconds)
+	{
+		if(_mixSeconds != seconds)
+		{
+			return;
+		}
+		_mixSeconds = seconds;
+	}
+
 	String get filename => _filename;
 	set filename(String value)
 	{
@@ -215,7 +228,7 @@ class NimaActorRenderObject extends RenderBox
 			layer.mix += elapsedSeconds;
 			layer.time += elapsedSeconds;
 			
-			lastMix = min(1.0, layer.mix/_mixSeconds);
+			lastMix = _mixSeconds == null || _mixSeconds == 0.0 ? 1.0 : min(1.0, layer.mix/_mixSeconds);
 			if(layer.animation.isLooping)
 			{
 				layer.time %= layer.animation.duration;
