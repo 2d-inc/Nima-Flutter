@@ -1,3 +1,3 @@
-## [0.0.1] - TODO: Add release date.
+## [1.0.0] - 5/5/2018
 
-* TODO: Describe initial release.
+* Initial release with an example NimaActor widget that implements a LeafRenderObjectWidget that can render a Nima actor. Alignment is done based on the setup axis aligned bounding box.
