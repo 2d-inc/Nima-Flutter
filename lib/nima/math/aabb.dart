@@ -1,5 +1,6 @@
 import "dart:typed_data";
 import "dart:math";
+import "vec2d.dart";
 
 class AABB
 {
@@ -44,21 +45,21 @@ class AABB
 		return out;
 	}
 
-	static Float32List center(Float32List out, AABB a)
+	static Vec2D center(Vec2D out, AABB a)
 	{
 		out[0] = (a[0] + a[2]) * 0.5;
 		out[1] = (a[1] + a[3]) * 0.5;
 		return out;
 	}
 
-	static Float32List size(Float32List out, AABB a)
+	static Vec2D size(Vec2D out, AABB a)
 	{
 		out[0] = a[2] - a[0];
 		out[1] = a[3] - a[1];
 		return out;
 	}
 
-	static Float32List extents(Float32List out, AABB a)
+	static Vec2D extents(Vec2D out, AABB a)
 	{
 		out[0] = (a[2] - a[0]) * 0.5;
 		out[1] = (a[3] - a[1]) * 0.5;
@@ -92,6 +93,27 @@ class AABB
 		double dy = a[3] - a[1];
 		return dx >= 0 && dy >= 0 && a[0] <= double.maxFinite && a[1] <= double.maxFinite && a[2] <= double.maxFinite && a[3] <= double.maxFinite;
 	}
+
+    static bool testOverlap(AABB a, AABB b)
+    {
+        double d1x = b[0] - a[2];
+        double d1y = b[1] - a[3];
+
+        double d2x = a[0] - b[2];
+        double d2y = a[1] - b[3];
+
+        if (d1x > 0.0 || d1y > 0.0)
+        {
+            return false;
+        }
+
+        if (d2x > 0.0 || d2y > 0.0)
+        {
+            return false;
+        }
+
+        return true;
+    }
 
 	@override
 	String toString()
