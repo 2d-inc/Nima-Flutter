@@ -10,6 +10,7 @@ import "jelly_component.dart";
 import "actor_ik_constraint.dart";
 import "actor_rotation_constraint.dart";
 import "actor_translation_constraint.dart";
+import "actor_scale_constraint.dart";
 import "dependency_sorter.dart";
 import "actor_image.dart";
 import "animation/actor_animation.dart";
@@ -537,7 +538,7 @@ class Actor
 					break;
 
 				case BlockTypes.ActorScaleConstraint:
-					//component = ActorScaleConstraint.Read(this, nodeBlock);
+					component = ActorScaleConstraint.read(this, nodeBlock, null);
 					break;
 
 				case BlockTypes.ActorRotationConstraint:
