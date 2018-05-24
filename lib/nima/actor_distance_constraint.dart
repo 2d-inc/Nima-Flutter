@@ -96,4 +96,25 @@ class ActorDistanceConstraint extends ActorTargetedConstraint
 
 	void update(int dirt) {}
 	void completeResolve() {}
+
+    get distance => _distance;
+    get mode => _mode;
+
+    set distance(double d)
+    {
+        if(_distance != d)
+        {
+            _distance = d;
+            this.markDirty();
+        }
+    }
+
+    set mode(int m)
+    {
+        if(_mode != m)
+        {
+            _mode = m;
+            this.markDirty();
+        }
+    }
 }

@@ -11,6 +11,7 @@ import "actor_ik_constraint.dart";
 import "actor_rotation_constraint.dart";
 import "actor_translation_constraint.dart";
 import "actor_distance_constraint.dart";
+import "actor_transform_constraint.dart";
 import "actor_scale_constraint.dart";
 import "dependency_sorter.dart";
 import "actor_image.dart";
@@ -547,7 +548,7 @@ class Actor
 					break;
 
 				case BlockTypes.ActorTransformConstraint:
-					//component = ActorTransformConstraint.Read(this, nodeBlock);
+					component = ActorTransformConstraint.read(this, nodeBlock, null);
 					break;
 			}
 

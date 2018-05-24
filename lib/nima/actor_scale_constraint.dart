@@ -1,9 +1,7 @@
-import "dart:typed_data";
 import "actor.dart";
 import "actor_node.dart";
 import "binary_reader.dart";
 import "actor_axis_constraint.dart";
-import "math/vec2d.dart";
 import "math/mat2d.dart";
 import "math/transform_components.dart";
 import "transform_space.dart";
