@@ -29,7 +29,7 @@ class ActorScaleConstraint extends ActorAxisConstraint
     makeInstance(Actor resetActor)
     {
         ActorScaleConstraint node = new ActorScaleConstraint();
-        node.copyAxisConstraint(node, resetActor);
+        node.copyAxisConstraint(this, resetActor);
         return node;
     }
 
