@@ -104,8 +104,8 @@ class FlutterActorImage extends ActorImage
 
 			int uvStride = 8;
 			int uvRow = currentFrame * uvStride;
-			Iterable it = this.sequenceUVs.getRange(uvRow, uvRow + uvStride);
-			List uvList = new List.from(it);
+			Iterable<double> it = this.sequenceUVs.getRange(uvRow, uvRow + uvStride);
+			List<double> uvList = new List.from(it);
 			_uvBuffer = new Float32List.fromList(uvList);
 		}
 		_canvasVertices = new ui.Vertices.raw(ui.VertexMode.triangles, _vertexBuffer, indices: _indices, textureCoordinates: _uvBuffer);
