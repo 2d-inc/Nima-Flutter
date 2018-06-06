@@ -119,7 +119,7 @@ class Vec2D
 		a[1] = -b[1];
 	}
 
-	static void normalize(Vec2D result, Vec2D a)
+	static Vec2D normalize(Vec2D result, Vec2D a)
 	{
 		double x = a[0];
 		double y = a[1];
@@ -130,6 +130,8 @@ class Vec2D
 			result[0] = a[0] * len;
 			result[1] = a[1] * len;
 		}
+
+		return result;
 	}
 
 	static double dot(Vec2D a, Vec2D b)
