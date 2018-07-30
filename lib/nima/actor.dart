@@ -403,11 +403,11 @@ class Actor
 
 		if(N != 78 || I != 73 || M != 77 || A != 65)
 		{
-			return throw new UnsupportedError("Not a valid Nima file.");
+			throw new UnsupportedError("Not a valid Nima file.");
 		}
 		if(_version < 12)
 		{
-			return throw new UnsupportedError("Nima file is too old.");
+			throw new UnsupportedError("Nima file is too old.");
 		}
 		
 		_root = new ActorNode.withActor(this);

@@ -235,7 +235,7 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 					// D < 0, three roots, but needs to use complex numbers/trigonometric solution
 					double u = 2.0 * sqrt(-p / 3.0);
 					double t = acos(3.0 * q / p / u) / 3.0; // D < 0 implies p < 0 and acos argument in [-1..1]
-					double k = 2.0 * PI / 3.0;
+					double k = 2.0 * pi / 3.0;
 					roots[0] = u * cos(t);
 					roots[1] = u * cos(t - k);
 					roots[2] = u * cos(t - 2.0 * k);
