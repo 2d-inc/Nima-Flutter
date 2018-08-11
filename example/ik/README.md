@@ -7,7 +7,7 @@ The purpose of this example is to show how you can manipulate elements in the hi
 ## Assets
 The included example asset comes from a fairly complex rig:
 
-<img width="400" alt="portfolio_view" src="https://github.com/2d-inc/Nima-Flutter/raw/master/examples/ik/example%20images/Old Man Rig.png">
+<img width="400" alt="portfolio_view" src="https://github.com/2d-inc/Nima-Flutter/raw/master/example/ik/example%20images/Old Man Rig.png">
 
 Even though the rig is complex, controlling it is easy. Moving the ctrl_shoot node will make the character point towards the target. A bullseye image has been added to the target to make the target visible.
 
@@ -31,7 +31,7 @@ abstract class NimaController
 }
 ```
 
-The specific implementation of the controller for this example is in [aim_controller.dart](https://github.com/2d-inc/Nima-Flutter/tree/master/examples/ik/lib/aim_controller.dart).
+The specific implementation of the controller for this example is in [aim_controller.dart](https://github.com/2d-inc/Nima-Flutter/tree/master/example/ik/lib/aim_controller.dart).
 
 ## License
 See the [LICENSE](LICENSE) file for license rights and limitations (MIT).

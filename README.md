@@ -14,7 +14,7 @@ Make sure the .png files are at the same level as the.nima file. If you renamed 
 In the future we may opt to package the images into the .nima file as we do for WebGL. [Let us know](https://www.2dimensions.com/forum) if you're in favor of this!
 
 ## Example
-Take a look at the provided [example application](https://github.com/2d-inc/Nima-Flutter/tree/master/examples/hop) for how to use the NimaActor widget with an exported Nima character.
+Take a look at the provided [example application](https://github.com/2d-inc/Nima-Flutter/tree/master/example/hop) for how to use the NimaActor widget with an exported Nima character.
 
 ## Usage
 The easiest way to get started is by using the provided NimaActor widget. This is a stateless Flutter widget that allows for one Nima character with one active animation playing. You can change the currently playing animation by changing the animation property's name. You can also specify the mixSeconds to determine how long it takes for the animation to interpolate from the previous one. A value of 0 means that it will just pop to the new animation. A value of 0.5 will mean it takes half of a second to fully mix the new animation on top of the old one.
