@@ -1,12 +1,22 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:nima/nima.dart';
-import 'package:nima/nima/actor_node.dart';
 import 'package:nima/nima/math/aabb.dart';
 import 'package:nima/nima/animation/actor_animation.dart';
 import 'dart:math';
 import 'package:flutter/scheduler.dart';
+import 'package:nima/nima/math/mat2d.dart';
+import 'package:nima/nima/math/vec2d.dart';
 
 typedef void NimaAnimationCompleted(String name);
+
+abstract class NimaController
+{
+	void initialize(FlutterActor actor);
+	void setViewTransform(Mat2D viewTransform);
+	void advance(FlutterActor actor,double elapsed);
+}
 
 class NimaActor extends LeafRenderObjectWidget
 {
@@ -17,8 +27,9 @@ class NimaActor extends LeafRenderObjectWidget
 	final double mixSeconds;
 	final bool paused;
 	final NimaAnimationCompleted completed;
+	final NimaController controller;
 
-	NimaActor(this.filename, {this.animation, this.fit, this.mixSeconds = 0.2, this.alignment = Alignment.center, this.paused = false, this.completed});
+	NimaActor(this.filename, {this.animation, this.fit, this.mixSeconds = 0.2, this.alignment = Alignment.center, this.paused = false, this.completed, this.controller});
 
 	@override
 	RenderObject createRenderObject(BuildContext context) 
@@ -29,6 +40,7 @@ class NimaActor extends LeafRenderObjectWidget
 											..animationName = animation
 											..completed = completed
 											..mixSeconds = mixSeconds
+											..controller = controller
 											..isPlaying = !paused && animation != null;
 	}
 
@@ -36,12 +48,13 @@ class NimaActor extends LeafRenderObjectWidget
 	void updateRenderObject(BuildContext context, covariant NimaActorRenderObject renderObject)
 	{
 		renderObject..filename = filename
-											..fit = fit
-											..alignment = alignment
-											..animationName = animation
-											..completed = completed
-											..mixSeconds = mixSeconds
-											..isPlaying = !paused && animation != null;
+									..fit = fit
+									..alignment = alignment
+									..animationName = animation
+									..completed = completed
+									..mixSeconds = mixSeconds
+									..controller = controller
+									..isPlaying = !paused && animation != null;
 	}
 }
 
@@ -62,6 +75,7 @@ class NimaActorRenderObject extends RenderBox
 	double _mixSeconds = 0.2;
 	double _lastFrameTime = 0.0;
 	NimaAnimationCompleted _completedCallback;
+	NimaController _controller;
 
 	List<NimaAnimationLayer> _animationLayers = new List<NimaAnimationLayer>();
 	bool _isPlaying;
@@ -131,6 +145,20 @@ class NimaActorRenderObject extends RenderBox
 												..mix = 0.0);
 	}
 
+	NimaController get controller => _controller;
+	set controller(NimaController control)
+	{
+		if(_controller == control)
+		{
+			return;
+		}
+		_controller = control;
+		if(_controller != null && _actor != null)
+		{
+			_controller.initialize(_actor);
+		}
+	}
+
 	double get mixSeconds => _mixSeconds;
 	set mixSeconds(double seconds)
 	{
@@ -168,6 +196,10 @@ class NimaActorRenderObject extends RenderBox
 				_actor = actor;
 				_actor.advance(0.0);
 				_setupAABB = _actor.computeAABB();
+				if(_controller != null)
+				{
+					_controller.initialize(_actor);
+				}
 				_updateAnimation(onlyWhenMissing:true);
 				markNeedsPaint();
 			}
@@ -265,15 +297,19 @@ class NimaActorRenderObject extends RenderBox
 				_completedCallback(animation.name);
 			}
 		}
+		
+		if(_controller != null)
+		{
+			_controller.advance(_actor, elapsedSeconds);
+		}
 
 		if(_isPlaying)
 		{
 			SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
 		}
-
+		
 		_actor.advance(elapsedSeconds);
-		ActorNode node = _actor.getNode("IK_leg_left");
-		//print("NODE ${node.x} ${node.y}");
+
 		markNeedsPaint();
 	}
 
@@ -325,9 +361,21 @@ class NimaActorRenderObject extends RenderBox
 					scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
 					break;
 			}
+			
+			if(_controller != null)
+			{
+				Mat2D transform = new Mat2D();
+				transform[4] = offset.dx + size.width/2.0 + (_alignment.x * size.width/2.0);
+				transform[5] = offset.dy + size.height/2.0 + (_alignment.y * size.height/2.0);
+				Mat2D.scale(transform, transform, new Vec2D.fromValues(scaleX, -scaleY));
+				Mat2D center = new Mat2D();
+				center[4] = x;
+				center[5] = y;
+				Mat2D.multiply(transform, transform, center);
+				_controller.setViewTransform(transform);
+			}
+
 			canvas.translate(offset.dx + size.width/2.0 + (_alignment.x * size.width/2.0), offset.dy + size.height/2.0 + (_alignment.y * size.height/2.0));
-			//canvas.translate(offset.dx + size.width/2.0, offset.dy + size.height/2.0);
-			//canvas.translate(offset.dx, offset.dy);
 			canvas.scale(scaleX, -scaleY);
 			canvas.translate(x, y);
 			_actor.draw(canvas);
