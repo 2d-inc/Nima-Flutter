@@ -1,6 +1,8 @@
 # Flutter + Nima IK
 Example app showing how to manipulate an actor using a controller written in Dart.
 
+<img width="400" alt="portfolio_view" src="https://github.com/2d-inc/Nima-Flutter/raw/master/example/ik/example%20images/viejo_example.gif">
+
 ## Intro
 The purpose of this example is to show how you can manipulate elements in the hierarchy programmatically at run time in Flutter.
 
