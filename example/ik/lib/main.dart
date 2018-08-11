@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:ik/aim_controller.dart';
 import 'package:nima/nima_actor.dart';
+import 'aim_controller.dart';
 
 void main() => runApp(new MyApp());
 
