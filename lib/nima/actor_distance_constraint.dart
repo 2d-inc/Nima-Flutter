@@ -1,7 +1,7 @@
 import "actor.dart";
 import "actor_node.dart";
 import "actor_targeted_constraint.dart";
-import "binary_reader.dart";
+import "readers/stream_reader.dart";
 import "math/vec2d.dart";
 import "math/mat2d.dart";
 
@@ -19,7 +19,7 @@ class ActorDistanceConstraint extends ActorTargetedConstraint
 
     ActorDistanceConstraint() : super();
 
-    static ActorDistanceConstraint read(Actor actor, BinaryReader reader, ActorDistanceConstraint component)
+    static ActorDistanceConstraint read(Actor actor, StreamReader reader, ActorDistanceConstraint component)
     {
         if(component == null)
         {
@@ -27,8 +27,8 @@ class ActorDistanceConstraint extends ActorTargetedConstraint
         }
         ActorTargetedConstraint.read(actor, reader, component);
         
-        component._distance = reader.readFloat32();
-        component._mode = reader.readUint8();
+        component._distance = reader.readFloat32("distance");
+        component._mode = reader.readUint8("modeId");
         
         return component;
     }

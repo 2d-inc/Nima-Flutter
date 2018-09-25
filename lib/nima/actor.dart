@@ -1,4 +1,5 @@
 import "dart:typed_data";
+import "dart:convert";
 import "actor_component.dart";
 import "actor_event.dart";
 import "actor_node.dart";
@@ -16,7 +17,43 @@ import "actor_scale_constraint.dart";
 import "dependency_sorter.dart";
 import "actor_image.dart";
 import "animation/actor_animation.dart";
-import "block_reader.dart";
+import "readers/stream_reader.dart";
+
+const Map<String, int> BlockTypesMap =
+{
+	"Unknown": BlockTypes.Unknown,
+	"Nodes": BlockTypes.Components,
+	"ActorNode": BlockTypes.ActorNode,
+	"ActorBone": BlockTypes.ActorBone,
+	"ActorRootBone": BlockTypes.ActorRootBone,
+	"ActorImage": BlockTypes.ActorImage,
+	"View": BlockTypes.View,
+	"Animation": BlockTypes.Animation,
+	"Animations": BlockTypes.Animations,
+	"Atlases": BlockTypes.Atlases,
+	"Atlas": BlockTypes.Atlas,
+	"ActorIKTarget": BlockTypes.ActorIKTarget,
+	"ActorEvent": BlockTypes.ActorEvent,
+	"CustomIntProperty": BlockTypes.CustomIntProperty,
+	"CustomFloatProperty": BlockTypes.CustomFloatProperty,
+	"CustomStringProperty": BlockTypes.CustomStringProperty,
+	"CustomBooleanProperty": BlockTypes.CustomBooleanProperty,
+	"ActorColliderRectangle": BlockTypes.ActorColliderRectangle,
+	"ActorColliderTriangle": BlockTypes.ActorColliderTriangle,
+	"ActorColliderCircle": BlockTypes.ActorColliderCircle,
+	"ActorColliderPolygon": BlockTypes.ActorColliderPolygon,
+	"ActorColliderLine": BlockTypes.ActorColliderLine,
+	"ActorImageSequence": BlockTypes.ActorImageSequence,
+	"ActorNodeSolo": BlockTypes.ActorNodeSolo,
+	"JellyComponent": BlockTypes.JellyComponent,
+	"ActorJellyBone": BlockTypes.ActorJellyBone,
+	"ActorIKConstraint": BlockTypes.ActorIKConstraint,
+	"ActorDistanceConstraint": BlockTypes.ActorDistanceConstraint,
+	"ActorTranslationConstraint": BlockTypes.ActorTranslationConstraint,
+	"ActorRotationConstraint": BlockTypes.ActorRotationConstraint,
+	"ActorScaleConstraint": BlockTypes.ActorScaleConstraint,
+	"ActorTransformConstraint": BlockTypes.ActorTransformConstraint
+};
 
 class BlockTypes
 {
@@ -393,18 +430,25 @@ class Actor
 
 	void load(ByteData data)
 	{
-		BlockReader reader = new BlockReader(data);
+		int N = data.getUint8(0);
+		int I = data.getUint8(1);
+		int M = data.getUint8(2);
+		int A = data.getUint8(3);
 
-		int N = reader.readUint8();
-		int I = reader.readUint8();
-		int M = reader.readUint8();
-		int A = reader.readUint8();
-		_version = reader.readUint32();
+        dynamic inputData = data;
 
 		if(N != 78 || I != 73 || M != 77 || A != 65)
 		{
-			throw new UnsupportedError("Not a valid Nima file.");
+            print("NOT A NIMA BINARY FILE!");
+            Uint8List byteList = data.buffer.asUint8List();
+            String stringData = new String.fromCharCodes(byteList);
+            var jsonActor = jsonDecode(stringData);
+            Map jsonObject = new Map();
+            jsonObject["container"] = jsonActor;
+            inputData = jsonObject; // Override.
 		}
+        StreamReader reader = new StreamReader(inputData);
+        _version = reader.readVersion();
 		if(_version < 12)
 		{
 			throw new UnsupportedError("Nima file is too old.");
@@ -412,8 +456,8 @@ class Actor
 		
 		_root = new ActorNode.withActor(this);
 
-		BlockReader block;
-		while((block=reader.readNextBlock()) != null)
+		StreamReader block;
+		while((block=reader.readNextBlock(BlockTypesMap)) != null)
 		{
 			switch(block.blockType)
 			{
@@ -423,22 +467,25 @@ class Actor
 				case BlockTypes.Animations:
 					readAnimationsBlock(block);
 					break;
+                case BlockTypes.Atlases:
+                    readAtlasesBlock(block);
+                    break;
 			}
 		}
 	}
 
-	void readComponentsBlock(BlockReader block)
+	void readComponentsBlock(StreamReader block)
 	{
-		int componentCount = block.readUint16();
+		int componentCount = block.readUint16Length();
 		_components = new List<ActorComponent>(componentCount+1);
 		_components[0] = _root;
 
 		// Guaranteed from the exporter to be in index order.
-		BlockReader nodeBlock;
+		StreamReader nodeBlock;
 
 		int componentIndex = 1;
 		_nodeCount = 1;
-		while((nodeBlock=block.readNextBlock()) != null)
+		while((nodeBlock=block.readNextBlock(BlockTypesMap)) != null)
 		{
 			ActorComponent component;
 			switch(nodeBlock.blockType)
@@ -613,15 +660,15 @@ class Actor
 		sortDependencies();
 	}
 
-	void readAnimationsBlock(BlockReader block)
+	void readAnimationsBlock(StreamReader block)
 	{
 		// Read animations.
-		int animationCount = block.readUint16();
+		int animationCount = block.readUint16Length();
 		_animations = new List<ActorAnimation>(animationCount);
-		BlockReader animationBlock;
+		StreamReader animationBlock;
 		int animationIndex = 0;
 		
-		while((animationBlock=block.readNextBlock()) != null)
+		while((animationBlock=block.readNextBlock(BlockTypesMap)) != null)
 		{
 			switch(animationBlock.blockType)
 			{
@@ -632,4 +679,31 @@ class Actor
 			}
 		}
 	}
+
+    void readAtlasesBlock(StreamReader block)
+    {
+        bool isOOB = block.readBool("isOOB");
+        block.openArray("data");
+        int numAtlases = block.readUint16Length();
+        print("Found these many atlases: $numAtlases");
+        String readerType = block.containerType;
+        switch (readerType) {
+            case "json":
+                for(int i = 0; i < numAtlases; i++)
+                {
+                    String imageString = block.readString("data"); // Label wouldn't be neede here either.
+                    const decoder = Base64Decoder();
+                    Uint8List bytes = decoder.convert(imageString, 22);
+                    print("I'm alive! $bytes");
+                }
+                break;
+            case "bin":
+                // TODO:
+                break;
+            default:
+                print("Unknown reader type!");
+                break;
+        }
+        block.closeArray();
+    }
 }

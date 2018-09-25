@@ -192,8 +192,7 @@ class FlutterActor extends Actor
 
 	Future<bool> loadFromBundle(String filename) async
 	{
-		ByteData data = await rootBundle.load(filename + ".nima");
-		print("Loading actor filename $filename");
+		ByteData data = await rootBundle.load(filename);
 		super.load(data);
 
 		List<Future<ui.Codec>> waitList = new List<Future<ui.Codec>>();

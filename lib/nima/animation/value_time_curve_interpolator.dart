@@ -1,4 +1,4 @@
-import "../binary_reader.dart";
+import "../readers/stream_reader.dart";
 import "keyframe.dart";
 import "dart:math";
 
@@ -67,7 +67,7 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 		return true;
 	}
 
-	static ValueTimeCurveInterpolator read(BinaryReader reader, InterpolationTypes type)
+	static ValueTimeCurveInterpolator read(StreamReader reader, InterpolationTypes type)
 	{
 		ValueTimeCurveInterpolator vtci = new ValueTimeCurveInterpolator();
 		switch(type)
@@ -75,18 +75,20 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 			case InterpolationTypes.Mirrored:
 			case InterpolationTypes.Asymmetric:
 			case InterpolationTypes.Disconnected:
-				vtci._inFactor = reader.readFloat64();
-				vtci._inValue = reader.readFloat32();
-				vtci._outFactor = reader.readFloat64();
-				vtci._outValue = reader.readFloat32();
+				vtci._inFactor = reader.readFloat64("clampedInFactor");
+				vtci._inValue = reader.readFloat32("inValue");
+				vtci._outFactor = reader.readFloat64("clampedOutFactor");
+				vtci._outValue = reader.readFloat32("outValue");
 				return vtci;
 
 			case InterpolationTypes.Hold:
-				vtci._inFactor = reader.readFloat64();
-				vtci._inValue = reader.readFloat32();
+				vtci._inFactor = reader.readFloat64("clampedInFactor");
+				vtci._inValue = reader.readFloat32("inValue");
 				vtci._outFactor = 0.0;
 				vtci._outValue = 0.0;
 				return vtci;
+            default:
+                break;
 		}
 
 		return null;

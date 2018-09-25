@@ -1,7 +1,7 @@
 import "actor.dart";
 import "actor_targeted_constraint.dart";
 import "transform_space.dart";
-import "binary_reader.dart";
+import "readers/stream_reader.dart";
 
 abstract class ActorAxisConstraint extends ActorTargetedConstraint
 {
@@ -26,49 +26,49 @@ abstract class ActorAxisConstraint extends ActorTargetedConstraint
 
     ActorAxisConstraint() : super();
 
-    static ActorAxisConstraint read(Actor actor, BinaryReader reader, ActorAxisConstraint component)
+    static ActorAxisConstraint read(Actor actor, StreamReader reader, ActorAxisConstraint component)
     {
         ActorTargetedConstraint.read(actor, reader, component);
-        component._copyX = reader.readUint8() == 1;
+        component._copyX = reader.readBool("copyX");
         if(component._copyX)
         {
-            component._scaleX = reader.readFloat32();
+            component._scaleX = reader.readFloat32("scaleX");
         }
 
-        component._enableMinX = reader.readUint8() == 1;
+        component._enableMinX = reader.readBool("enableMinX");
         if(component._enableMinX)
         {
-            component._minX = reader.readFloat32();
+            component._minX = reader.readFloat32("minX");
         }
 
-        component._enableMaxX = reader.readUint8() == 1;
+        component._enableMaxX = reader.readBool("enableMaxX");
         if(component._enableMaxX)
         {
-            component._maxX = reader.readFloat32();
+            component._maxX = reader.readFloat32("maxX");
         }
 
-        component._copyY = reader.readUint8() == 1;
+        component._copyY = reader.readBool("copyY");
         if(component._copyY)
         {
-            component._scaleY = reader.readFloat32();
+            component._scaleY = reader.readFloat32("scaleY");
         }
 
-        component._enableMinY = reader.readUint8() == 1;
+        component._enableMinY = reader.readBool("enableMinY");
         if(component._enableMinY)
         {
-            component._minY = reader.readFloat32();
+            component._minY = reader.readFloat32("minY");
         }
 
-        component._enableMaxY = reader.readUint8() == 1;
+        component._enableMaxY = reader.readBool("enableMaxY");
         if(component._enableMaxY)
         {
-            component._maxY = reader.readFloat32();
+            component._maxY = reader.readFloat32("maxY");
         }
 
-        component._offset = reader.readUint8() == 1;
-        component._sourceSpace = reader.readUint8();
-        component._destSpace = reader.readUint8();
-        component._minMaxSpace = reader.readUint8();
+        component._offset = reader.readBool("offset");
+        component._sourceSpace = reader.readUint8("sourceSpaceId");
+        component._destSpace = reader.readUint8("destSpaceId");
+        component._minMaxSpace = reader.readUint8("minMaxSpaceId");
 
         return component;
     }
