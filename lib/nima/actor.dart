@@ -112,6 +112,7 @@ class Actor
 	List<ActorImage> _imageNodes;
 	List<ActorAnimation> _animations;
 	List<ActorComponent> _dependencyOrder;
+    List<Uint8List> _atlases;
 
 	Actor();
 
@@ -468,7 +469,7 @@ class Actor
 					readAnimationsBlock(block);
 					break;
                 case BlockTypes.Atlases:
-                    readAtlasesBlock(block);
+                    readAtlasesBlock(block, this);
                     break;
 			}
 		}
@@ -680,11 +681,12 @@ class Actor
 		}
 	}
 
-    void readAtlasesBlock(StreamReader block)
+    void readAtlasesBlock(StreamReader block, Actor actor)
     {
         bool isOOB = block.readBool("isOOB");
         block.openArray("data");
         int numAtlases = block.readUint16Length();
+        _atlases = new List<Uint8List>(numAtlases);
         print("Found these many atlases: $numAtlases");
         String readerType = block.containerType;
         switch (readerType) {
@@ -692,9 +694,8 @@ class Actor
                 for(int i = 0; i < numAtlases; i++)
                 {
                     String imageString = block.readString("data"); // Label wouldn't be neede here either.
-                    const decoder = Base64Decoder();
-                    Uint8List bytes = decoder.convert(imageString, 22);
-                    print("I'm alive! $bytes");
+                    Uint8List bytes = Base64Decoder().convert(imageString, 22);
+                    actor._atlases[i] = bytes;
                 }
                 break;
             case "bin":
@@ -706,4 +707,6 @@ class Actor
         }
         block.closeArray();
     }
+
+    List<Uint8List> get atlases => this._atlases;
 }

@@ -51,7 +51,7 @@ abstract class StreamReader
     
     bool readBool(String label);
 
-    int readId(String label);
+    int readId(String label, bool isOffset);
 
     StreamReader readNextBlock(Map<String, int> types);
 

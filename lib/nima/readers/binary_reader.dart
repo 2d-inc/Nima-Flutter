@@ -185,9 +185,14 @@ abstract class BinaryReader implements StreamReader
     }
 
     @override
-    int readId(String label)
+    int readId(String label, bool isOffset)
     {
-        return readUint16(label);
+        int id = readUint16(label);
+        if(isOffset)
+        {
+            id += 1;
+        }
+        return id;
     }
 
     @override

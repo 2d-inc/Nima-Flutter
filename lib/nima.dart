@@ -198,21 +198,36 @@ class FlutterActor extends Actor
 		List<Future<ui.Codec>> waitList = new List<Future<ui.Codec>>();
 		_images = new List<ui.Image>(this.texturesUsed);
 
-		for(int i = 0; i < this.texturesUsed; i++)
-		{
-			String atlasFilename;
-			if(this.texturesUsed == 1)
-			{
-				atlasFilename = filename + ".png";
-			}
-			else
-			{
-				atlasFilename = filename + i.toString() + ".png";
-			}
-			ByteData data = await rootBundle.load(atlasFilename);
-			Uint8List list = new Uint8List.view(data.buffer);
-			waitList.add(ui.instantiateImageCodec(list));
-		}
+        List<Uint8List> atlases = this.atlases;
+
+        if(atlases == null)
+        {
+            for(int i = 0; i < this.texturesUsed; i++)
+            {
+                String atlasFilename;
+                if(this.texturesUsed == 1)
+                {
+                    int dotIdx = filename.indexOf(".");
+                    dotIdx = dotIdx > -1 ? dotIdx : filename.length;
+                    filename = filename.substring(0, dotIdx);
+                    atlasFilename = filename + ".png";
+                }
+                else
+                {
+                    atlasFilename = filename + i.toString() + ".png";
+                }
+                ByteData data = await rootBundle.load(atlasFilename);
+                Uint8List list = new Uint8List.view(data.buffer);
+                waitList.add(ui.instantiateImageCodec(list));
+            }
+        }
+        else
+        {
+            for(int i = 0; i < atlases.length; i++)
+            {
+                waitList.add(ui.instantiateImageCodec(atlases[i]));
+            }
+        }
 
 		List<ui.Codec> codecs = await Future.wait(waitList);
 		List<ui.FrameInfo> frames = await Future.wait(codecs.map((codec) => codec.getNextFrame()));
