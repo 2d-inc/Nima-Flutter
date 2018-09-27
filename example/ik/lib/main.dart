@@ -46,7 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     fit: BoxFit.contain,
                     controller: _oldManController,
                     animation: _animationName,
-                    mixSeconds: 0.5, completed: (String animationName) {
+                    mixSeconds: 0.5, 
+                    completed: (String animationName) {
               setState(() {
                 // Return to run.
                 _animationName = "run";

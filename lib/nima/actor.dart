@@ -674,7 +674,7 @@ class Actor
 			switch(animationBlock.blockType)
 			{
 				case BlockTypes.Animation:
-					ActorAnimation anim = ActorAnimation.read(animationBlock, _components);
+					ActorAnimation anim = ActorAnimation.read(animationBlock, _components, this.version);
 					_animations[animationIndex++] = anim;
 					break;
 			}

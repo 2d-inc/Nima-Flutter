@@ -24,25 +24,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _animationName = "Constraint";
+  String _animationName = "Slide";
 
   @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(title: new Text(widget.title)),
-      body: new Center(
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: 
-            [
-                NimaActor("assets/SlidingSolo.nmj",
-                    alignment: Alignment.center,
-                    fit: BoxFit.contain,
-                    animation: _animationName,
-                )
-            ],
-        ),
-      )
-    );
-  }
+    Widget build(BuildContext context) {
+        return new Scaffold(
+            backgroundColor: Colors.grey,
+            appBar: new AppBar(title: new Text(widget.title)),
+            body: new Center(
+                child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: 
+                    [
+                        Expanded(
+                            child: NimaActor("assets/SlidingSolo.nmj",
+                                alignment: Alignment.center,
+                                fit: BoxFit.contain,
+                                animation: _animationName,
+                            )
+                        )
+                    ],
+                ),
+            )
+        );
+    }
 }
