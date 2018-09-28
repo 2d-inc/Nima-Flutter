@@ -53,8 +53,6 @@ abstract class ActorComponent
 		component._name = reader.readString("name");
 		component._parentIdx = reader.readId("parentId");
 
-        print("COMPONENT: ${component._name} has parent ${component._parentIdx}");
-
 		return component;
 	}
 

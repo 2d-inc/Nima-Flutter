@@ -699,7 +699,13 @@ class Actor
                 }
                 break;
             case "bin":
-                // TODO:
+                for(int i = 0; i < numAtlases; i++)
+                {
+                    int size = block.readUint32("");
+                    Uint8List bytes = new Uint8List(size);
+                    block.readUint8Array(bytes, size, 0, "");
+                    actor._atlases[i] = bytes;
+                }
                 break;
             default:
                 print("Unknown reader type!");
