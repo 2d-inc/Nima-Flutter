@@ -564,19 +564,21 @@ class KeyFrameDrawOrder extends KeyFrame
 	static KeyFrame read(StreamReader reader, ActorComponent component)
 	{
 		KeyFrameDrawOrder frame = new KeyFrameDrawOrder();
-        reader.openArray("drawOrder");
-		if(!KeyFrame.read(reader, frame))
+		
+        if(!KeyFrame.read(reader, frame))
 		{
 			return null;
 		}
+
+        reader.openArray("drawOrder");
 		int numOrderedNodes = reader.readUint16Length();
 		frame._orderedNodes = new List<DrawOrderIndex>(numOrderedNodes);
 		for(int i = 0; i < numOrderedNodes; i++)
 		{
 			DrawOrderIndex drawOrder = new DrawOrderIndex();
             reader.openObject("frame");
-			drawOrder.nodeIdx = reader.readUint16("index");
-			drawOrder.order = reader.readUint16("nodeId");
+			drawOrder.nodeIdx = reader.readId("index");
+			drawOrder.order = reader.readId("nodeId");
 			frame._orderedNodes[i] = drawOrder;
             reader.closeObject();
 		}

@@ -112,7 +112,7 @@ class Actor
 	List<ActorImage> _imageNodes;
 	List<ActorAnimation> _animations;
 	List<ActorComponent> _dependencyOrder;
-    List<Uint8List> _atlases;
+    List _atlases;
 
 	Actor();
 
@@ -686,33 +686,46 @@ class Actor
         bool isOOB = block.readBool("isOOB");
         block.openArray("data");
         int numAtlases = block.readUint16Length();
-        _atlases = new List<Uint8List>(numAtlases);
-        print("Found these many atlases: $numAtlases");
+
         String readerType = block.containerType;
-        switch (readerType) {
-            case "json":
-                for(int i = 0; i < numAtlases; i++)
-                {
-                    String imageString = block.readString("data"); // Label wouldn't be neede here either.
-                    Uint8List bytes = Base64Decoder().convert(imageString, 22);
-                    actor._atlases[i] = bytes;
-                }
-                break;
-            case "bin":
-                for(int i = 0; i < numAtlases; i++)
-                {
-                    int size = block.readUint32("");
-                    Uint8List bytes = new Uint8List(size);
-                    block.readUint8Array(bytes, size, 0, "");
-                    actor._atlases[i] = bytes;
-                }
-                break;
-            default:
-                print("Unknown reader type!");
-                break;
+        if(isOOB)
+        {
+            _atlases = new List<String>(numAtlases);
+            for(int i = 0; i < numAtlases; i++)
+            {
+                String filename = block.readString("data");
+                actor._atlases[i] = filename;
+            }
+        }
+        else 
+        {
+            _atlases = new List<Uint8List>(numAtlases);
+            switch (readerType) 
+            {
+                case "json":
+                    for(int i = 0; i < numAtlases; i++)
+                    {
+                        String imageString = block.readString("data"); // Label wouldn't be neede here either.
+                        Uint8List bytes = Base64Decoder().convert(imageString, 22);
+                        actor._atlases[i] = bytes;
+                    }
+                    break;
+                case "bin":
+                    for(int i = 0; i < numAtlases; i++)
+                    {
+                        int size = block.readUint32("");
+                        Uint8List bytes = new Uint8List(size);
+                        block.readUint8Array(bytes, size, 0, "");
+                        actor._atlases[i] = bytes;
+                    }
+                    break;
+                default:
+                    print("Unknown reader type!");
+                    break;
+            }
         }
         block.closeArray();
     }
 
-    List<Uint8List> get atlases => this._atlases;
+    List get atlases => this._atlases;
 }

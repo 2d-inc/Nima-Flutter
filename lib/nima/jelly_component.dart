@@ -197,8 +197,8 @@ class JellyComponent extends ActorComponent
 		node._easeOut = reader.readFloat32("easeOut");
 		node._scaleIn = reader.readFloat32("scaleIn");
 		node._scaleOut = reader.readFloat32("scaleOut");
-		node._inTargetIdx = reader.readUint16("inTargetId");
-		node._outTargetIdx = reader.readUint16("outTargetId");
+		node._inTargetIdx = reader.readId("inTargetId");
+		node._outTargetIdx = reader.readId("outTargetId");
 		
 		return node;
 	}

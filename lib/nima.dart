@@ -198,8 +198,10 @@ class FlutterActor extends Actor
 		List<Future<ui.Codec>> waitList = new List<Future<ui.Codec>>();
 		_images = new List<ui.Image>(this.texturesUsed);
 
-        List<Uint8List> atlases = this.atlases;
+        List atlases = this.atlases;
+        bool isOOB = atlases != null && atlases.length > 0 && atlases.first is String;
 
+        // Support for older runtimes where atlases were always stored externally.
         if(atlases == null)
         {
             for(int i = 0; i < this.texturesUsed; i++)
@@ -221,7 +223,21 @@ class FlutterActor extends Actor
                 waitList.add(ui.instantiateImageCodec(list));
             }
         }
-        else
+        else if(isOOB)
+        {
+            int pathIdx = filename.lastIndexOf('/') + 1;
+            String basePath = filename.substring(0, pathIdx);
+
+            for(int i = 0; i < atlases.length; i++)
+            {
+                String atlasPath = basePath + atlases[i];
+                ByteData data = await rootBundle.load(atlasPath);
+                Uint8List list = new Uint8List.view(data.buffer);
+                waitList.add(ui.instantiateImageCodec(list));
+            }
+        }
+        // If the 'atlases' List doesn't contain file paths, it should contain the bytes directly; images are in-band.
+        else 
         {
             for(int i = 0; i < atlases.length; i++)
             {
