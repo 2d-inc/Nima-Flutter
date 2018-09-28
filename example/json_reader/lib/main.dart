@@ -24,7 +24,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _animationName = "Slide";
+  String _animationName = "Constraint";
 
   @override
     Widget build(BuildContext context) {

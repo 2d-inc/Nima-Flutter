@@ -177,7 +177,7 @@ abstract class JSONReader implements StreamReader
     // @hasOffset flag is needed for older (up until version 14) files.
     // Since the JSON Reader has been added in version 15, the field here is optional.
 	@override
-	readId(String label, [bool hasOffset])
+	readId(String label)
 	{
 		var val = this.readProp(label);
 		return val is num ? val+1 : 0;

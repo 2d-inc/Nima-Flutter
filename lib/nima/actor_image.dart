@@ -309,7 +309,7 @@ class ActorImage extends ActorNode
 				{
                     reader.openObject("bone");
 					BoneConnection bc = new BoneConnection();
-					bc.boneIdx = reader.readId("id", actor.version > 14);
+					bc.boneIdx = reader.readId("id");
 					reader.readFloat32ArrayOffset(bc.bind.values, 6, 0, "bind");
                     reader.closeObject();
 					Mat2D.invert(bc.inverseBind, bc.bind);

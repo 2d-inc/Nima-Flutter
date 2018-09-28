@@ -201,12 +201,12 @@ class ComponentAnimation
 		return _properties;
 	}
 
-	static ComponentAnimation read(StreamReader reader, List<ActorComponent> components, int version)
+	static ComponentAnimation read(StreamReader reader, List<ActorComponent> components)
 	{
         reader.openObject("node");
 		ComponentAnimation componentAnimation = new ComponentAnimation();
 
-		componentAnimation._componentIndex = reader.readId("nodeIndex", version > 14);
+		componentAnimation._componentIndex = reader.readId("nodeIndex");
         reader.openArray("Properties");
 		int numProperties = reader.readUint16Length();
 
@@ -409,7 +409,7 @@ class ActorAnimation
 		}
 	}
 
-	static ActorAnimation read(StreamReader reader, List<ActorComponent> components, int version)
+	static ActorAnimation read(StreamReader reader, List<ActorComponent> components)
 	{
 		ActorAnimation animation = new ActorAnimation();
 		animation._name = reader.readString("name");
@@ -430,7 +430,7 @@ class ActorAnimation
 		List<ComponentAnimation> animatedComponents = new List<ComponentAnimation>(numKeyedComponents);
 		for(int i = 0; i < numKeyedComponents; i++)
 		{
-			ComponentAnimation componentAnimation = ComponentAnimation.read(reader, components, version);
+			ComponentAnimation componentAnimation = ComponentAnimation.read(reader, components);
 			animatedComponents[i] = componentAnimation;
 			if(componentAnimation != null)
 			{

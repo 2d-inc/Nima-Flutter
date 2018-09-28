@@ -167,7 +167,7 @@ class ActorIKConstraint extends ActorTargetedConstraint
 			for(int i = 0; i < numInfluencedBones; i++)
 			{
 				InfluencedBone ib = new InfluencedBone();
-				ib.boneIdx = reader.readId("", actor.version > 14); // No need for a label here since we're removing items from the array.
+				ib.boneIdx = reader.readId(""); // No need for a label here since we're removing items from the array.
 				component._influencedBones[i] = ib;
 			}
 		}

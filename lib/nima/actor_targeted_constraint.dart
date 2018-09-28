@@ -29,7 +29,7 @@ abstract class ActorTargetedConstraint extends ActorConstraint
 	static ActorTargetedConstraint read(Actor actor, StreamReader reader, ActorTargetedConstraint component)
 	{
 		ActorConstraint.read(actor, reader, component);
-		component._targetIdx = reader.readId("targetId", actor.version > 14);
+		component._targetIdx = reader.readId("targetId");
 
 		return component;
 	}
