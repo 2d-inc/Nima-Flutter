@@ -15,6 +15,12 @@
             "request": "launch",
             "type": "dart",
             "program": "${workspaceFolder}/example/hop/lib/main.dart"
+        },
+        {
+            "name": "IK",
+            "request": "launch",
+            "type": "dart",
+            "program": "${workspaceFolder}/example/ik/lib/main.dart"
         }
     ]
 }

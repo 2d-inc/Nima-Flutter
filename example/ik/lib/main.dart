@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onPointerMove: _pointerMove,
           child: new Stack(children: <Widget>[
             new Positioned.fill(
-                child: NimaActor("assets/Old Man",
+                child: NimaActor("assets/Old Man.nima",
                     alignment: Alignment.center,
                     fit: BoxFit.contain,
                     controller: _oldManController,

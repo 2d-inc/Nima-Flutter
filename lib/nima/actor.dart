@@ -440,7 +440,6 @@ class Actor
 
 		if(N != 78 || I != 73 || M != 77 || A != 65)
 		{
-            print("NOT A NIMA BINARY FILE!");
             Uint8List byteList = data.buffer.asUint8List();
             String stringData = new String.fromCharCodes(byteList);
             var jsonActor = jsonDecode(stringData);
