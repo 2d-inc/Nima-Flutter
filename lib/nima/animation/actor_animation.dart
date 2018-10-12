@@ -448,7 +448,7 @@ class ActorAnimation
 				}
 			}
 		}
-
+        reader.closeArray();
 		animation._components = new List<ComponentAnimation>(animatedComponentCount);
 		animation._triggerComponents = new List<ComponentAnimation>(triggerComponentCount);
 
