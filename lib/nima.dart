@@ -111,14 +111,13 @@ class FlutterActorImage extends ActorImage
 		_canvasVertices = new ui.Vertices.raw(ui.VertexMode.triangles, _vertexBuffer, indices: _indices, textureCoordinates: _uvBuffer);
 	}
 
-	draw(ui.Canvas canvas)
+	draw(ui.Canvas canvas, double opacity)
 	{
 		if(triangles == null || this.renderCollapsed || opacity <= 0 || _canvasVertices == null)
 		{
 			return;
 		}
-		int alpha = (this.renderOpacity * 255).toInt();
-		_paint.color = _paint.color.withAlpha(alpha);
+		_paint.color = _paint.color.withOpacity(this.renderOpacity*opacity);
 		_paint.isAntiAlias = true;
 		canvas.drawVertices(_canvasVertices, ui.BlendMode.srcOver, _paint);
 		if(onDraw != null)
@@ -234,19 +233,18 @@ class FlutterActor extends Actor
 	{
 		super.advance(seconds);
 
-		// TODO: update vertex buffers only when an image update occurred. or use GL :)
 		for(FlutterActorImage image in imageNodes)
 		{
 			image.updateVertices();
 		}
 	}
 
-	draw(ui.Canvas canvas)
+	draw(ui.Canvas canvas, [double opacity=1.0])
 	{
 		// N.B. imageNodes are sorted as necessary by Actor.
 		for(FlutterActorImage image in imageNodes)
 		{
-			image.draw(canvas);
+			image.draw(canvas, opacity);
 		}
 	}
 

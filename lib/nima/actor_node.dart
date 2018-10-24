@@ -16,7 +16,7 @@ class ActorNode extends ActorComponent
 	double _rotation = 0.0;
 	Vec2D _scale = new Vec2D.fromValues(1.0, 1.0);
 	double _opacity = 1.0;
-	double _renderOpacity = 1.0;
+	double renderOpacity = 1.0;
 
 	bool _overrideWorldTransform = false;
 	bool _isCollapsedVisibility = false;
@@ -178,11 +178,6 @@ class ActorNode extends ActorComponent
 		markTransformDirty();
 	}
 
-	double get renderOpacity
-	{
-		return _renderOpacity;
-	}
-
 	bool get renderCollapsed
 	{
 		return _renderCollapsed;
@@ -233,12 +228,12 @@ class ActorNode extends ActorComponent
 
 	void updateWorldTransform()
 	{
-		_renderOpacity = _opacity;
+		renderOpacity = _opacity;
 	
 		if(parent != null)
 		{
 			_renderCollapsed = _isCollapsedVisibility || parent._renderCollapsed;
-			_renderOpacity *= parent._renderOpacity;
+			renderOpacity *= parent.renderOpacity;
 			if(!_overrideWorldTransform)
 			{
 				Mat2D.multiply(_worldTransform, parent._worldTransform, _transform);
@@ -305,7 +300,7 @@ class ActorNode extends ActorComponent
 		Vec2D.copy(_scale, node._scale);
 		_rotation = node._rotation;
 		_opacity = node._opacity;
-		_renderOpacity = node._renderOpacity;
+		renderOpacity = node.renderOpacity;
 		_overrideWorldTransform = node._overrideWorldTransform;
 	}
 
