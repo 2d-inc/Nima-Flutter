@@ -20,3 +20,26 @@ class PropertyTypes
 	static const int Sequence = 17;
 	static const int ActiveChildIndex = 18;
 }
+
+const Map<String, int> PropertyTypesMap = 
+{
+    "Unknown": PropertyTypes.Unknown,
+	"PosX": PropertyTypes.PosX,
+	"PosY": PropertyTypes.PosY,
+	"ScaleX": PropertyTypes.ScaleX,
+	"ScaleY": PropertyTypes.ScaleY,
+	"Rotation": PropertyTypes.Rotation,
+	"Opacity": PropertyTypes.Opacity,
+	"DrawOrder": PropertyTypes.DrawOrder,
+	"Length": PropertyTypes.Length,
+	"VertexDeform": PropertyTypes.VertexDeform,
+	"ConstraintStrength": PropertyTypes.ConstraintStrength,
+	"Trigger": PropertyTypes.Trigger,
+	"IntProperty": PropertyTypes.IntProperty,
+	"FloatProperty": PropertyTypes.FloatProperty,
+	"StringProperty": PropertyTypes.StringProperty,
+	"BooleanProperty": PropertyTypes.BooleanProperty,
+	"CollisionEnabled": PropertyTypes.CollisionEnabled,
+	"Sequence": PropertyTypes.Sequence,
+	"ActiveChildIndex": PropertyTypes.ActiveChildIndex
+};

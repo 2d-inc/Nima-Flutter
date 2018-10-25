@@ -2,7 +2,7 @@ import "actor_targeted_constraint.dart";
 import "actor_node.dart";
 import "actor_component.dart";
 import "actor.dart";
-import "binary_reader.dart";
+import "readers/stream_reader.dart";
 import "math/transform_components.dart";
 import "math/mat2d.dart";
 import "dart:math";
@@ -25,34 +25,33 @@ class ActorRotationConstraint extends ActorTargetedConstraint
 	TransformComponents _componentsA = new TransformComponents();
 	TransformComponents _componentsB = new TransformComponents();
 
-	static ActorRotationConstraint read(Actor actor, BinaryReader reader, ActorRotationConstraint component)
+	static ActorRotationConstraint read(Actor actor, StreamReader reader, ActorRotationConstraint component)
 	{
 		if(component == null)
 		{
 			component = new ActorRotationConstraint();
 		}
 		ActorTargetedConstraint.read(actor, reader, component);
-		component._copy = reader.readUint8() == 1;
+		component._copy = reader.readBool("copy");
 		if(component._copy)
 		{
-			component._scale = reader.readFloat32();
+			component._scale = reader.readFloat32("scale");
 		}
-		component._enableMin = reader.readUint8() == 1;
+		component._enableMin = reader.readBool("enableMin");
 		if(component._enableMin)
 		{
-			component._min = reader.readFloat32();
+			component._min = reader.readFloat32("min");
 		}
-		component._enableMax = reader.readUint8() == 1;
+		component._enableMax = reader.readBool("enableMax");
 		if(component._enableMax)
 		{
-			component._max = reader.readFloat32();
+			component._max = reader.readFloat32("max");
 		}
 
-		component._offset = reader.readUint8() == 1;
-		component._sourceSpace = reader.readUint8();
-		component._destSpace = reader.readUint8();
-		component._minMaxSpace = reader.readUint8();
-
+		component._offset = reader.readBool("offset");
+		component._sourceSpace = reader.readUint8("sourceSpaceId");
+		component._destSpace = reader.readUint8("destSpaceId");
+		component._minMaxSpace = reader.readUint8("minMaxSpaceId");
 		
 		return component;
 	}

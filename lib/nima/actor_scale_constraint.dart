@@ -1,6 +1,6 @@
 import "actor.dart";
 import "actor_node.dart";
-import "binary_reader.dart";
+import "readers/stream_reader.dart";
 import "actor_axis_constraint.dart";
 import "math/mat2d.dart";
 import "math/transform_components.dart";
@@ -13,7 +13,7 @@ class ActorScaleConstraint extends ActorAxisConstraint
 
     ActorScaleConstraint() : super();
 
-    static ActorScaleConstraint read(Actor actor, BinaryReader reader, ActorScaleConstraint component)
+    static ActorScaleConstraint read(Actor actor, StreamReader reader, ActorScaleConstraint component)
     {
         if(component == null)
         {

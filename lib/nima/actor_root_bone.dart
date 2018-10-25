@@ -1,4 +1,4 @@
-import "binary_reader.dart";
+import "readers/stream_reader.dart";
 import "actor.dart";
 import "actor_node.dart";
 import "actor_bone.dart";
@@ -37,7 +37,7 @@ class ActorRootBone extends ActorNode
 		return instanceNode;
 	}
 
-	static ActorRootBone read(Actor actor, BinaryReader reader, ActorRootBone node)
+	static ActorRootBone read(Actor actor, StreamReader reader, ActorRootBone node)
 	{
 		if(node == null)
 		{

@@ -5,7 +5,7 @@ import "actor_targeted_constraint.dart";
 import "math/mat2d.dart";
 import "math/transform_components.dart";
 import "transform_space.dart";
-import "binary_reader.dart";
+import "readers/stream_reader.dart";
 
 const pi2 = pi*2;
 
@@ -18,7 +18,7 @@ class ActorTransformConstraint extends ActorTargetedConstraint
 
     ActorTransformConstraint() : super();
 
-    static ActorTransformConstraint read(Actor actor, BinaryReader reader, ActorTransformConstraint component)
+    static ActorTransformConstraint read(Actor actor, StreamReader reader, ActorTransformConstraint component)
 	{
         if(component == null)
         {
@@ -26,8 +26,8 @@ class ActorTransformConstraint extends ActorTargetedConstraint
         }
         ActorTargetedConstraint.read(actor, reader, component);
 
-        component._sourceSpace = reader.readUint8();
-        component._destSpace = reader.readUint8();
+        component._sourceSpace = reader.readUint8("sourceSpaceId");
+        component._destSpace = reader.readUint8("destSpaceId");
 
         return component;
     }

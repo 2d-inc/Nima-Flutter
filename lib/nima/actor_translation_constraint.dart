@@ -4,14 +4,14 @@ import "actor_axis_constraint.dart";
 import "math/vec2d.dart";
 import "math/mat2d.dart";
 import "transform_space.dart";
-import "binary_reader.dart";
+import "readers/stream_reader.dart";
 
 class ActorTranslationConstraint extends ActorAxisConstraint
 {
 
     ActorTranslationConstraint() : super();
 
-    static ActorTranslationConstraint read(Actor actor, BinaryReader reader, ActorTranslationConstraint component)
+    static ActorTranslationConstraint read(Actor actor, StreamReader reader, ActorTranslationConstraint component)
     {
         if(component == null)
         {
