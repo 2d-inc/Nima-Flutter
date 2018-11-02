@@ -75,14 +75,14 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator
 			case InterpolationTypes.Mirrored:
 			case InterpolationTypes.Asymmetric:
 			case InterpolationTypes.Disconnected:
-				vtci._inFactor = reader.readFloat64("clampedInFactor");
+				vtci._inFactor = reader.readFloat64("inFactor");
 				vtci._inValue = reader.readFloat32("inValue");
-				vtci._outFactor = reader.readFloat64("clampedOutFactor");
+				vtci._outFactor = reader.readFloat64("outFactor");
 				vtci._outValue = reader.readFloat32("outValue");
 				return vtci;
 
 			case InterpolationTypes.Hold:
-				vtci._inFactor = reader.readFloat64("clampedInFactor");
+				vtci._inFactor = reader.readFloat64("inFactor");
 				vtci._inValue = reader.readFloat32("inValue");
 				vtci._outFactor = 0.0;
 				vtci._outValue = 0.0;

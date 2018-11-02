@@ -259,7 +259,7 @@ class ActorNode extends ActorComponent
 
 		if(actor.version >= 13)
 		{
-			node._isCollapsedVisibility = reader.readBool("isCollapsedVisibility");
+			node._isCollapsedVisibility = reader.readBool("isCollapsed");
 		}
 
 		return node;

@@ -100,13 +100,13 @@ class PropertyAnimation
 					break;
 			}
 
-            propertyReader.openArray("KeyFrames");
+            propertyReader.openArray("frames");
 			int keyFrameCount = propertyReader.readUint16Length();
 			propertyAnimation._keyFrames = new List<KeyFrame>(keyFrameCount);
 			KeyFrame lastKeyFrame;
 			for(int i = 0; i < keyFrameCount; i++)
 			{
-                propertyReader.openObject("KeyFrame");
+                propertyReader.openObject("frame");
 				KeyFrame frame = keyFrameReader(propertyReader, component);
 				propertyAnimation._keyFrames[i] = frame;
 				if(lastKeyFrame != null)
@@ -203,11 +203,10 @@ class ComponentAnimation
 
 	static ComponentAnimation read(StreamReader reader, List<ActorComponent> components)
 	{
-        reader.openObject("node");
+        reader.openObject("component");
 		ComponentAnimation componentAnimation = new ComponentAnimation();
 
-		componentAnimation._componentIndex = reader.readId("nodeIndex");
-        reader.openArray("Properties");
+		componentAnimation._componentIndex = reader.readId("component");
 		int numProperties = reader.readUint16Length();
 
 		componentAnimation._properties = new List<PropertyAnimation>(numProperties);
@@ -215,7 +214,6 @@ class ComponentAnimation
 		{
 			componentAnimation._properties[i] = PropertyAnimation.read(reader, components[componentAnimation._componentIndex]);
 		}
-        reader.closeArray();
         reader.closeObject();
 
 		return componentAnimation;
@@ -418,7 +416,7 @@ class ActorAnimation
 		animation._isLooping = reader.readBool("isLooping");
 
 
-        reader.openArray("KeyedNodes");
+        reader.openArray("keyed");
 		int numKeyedComponents = reader.readUint16Length();
 		//animation._components = new ComponentAnimation[numKeyedComponents];
 

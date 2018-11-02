@@ -577,8 +577,8 @@ class KeyFrameDrawOrder extends KeyFrame
 		{
 			DrawOrderIndex drawOrder = new DrawOrderIndex();
             reader.openObject("frame");
-			drawOrder.nodeIdx = reader.readId("index");
-			drawOrder.order = reader.readId("nodeId");
+			drawOrder.nodeIdx = reader.readId("component");
+			drawOrder.order = reader.readUint16("order");
 			frame._orderedNodes[i] = drawOrder;
             reader.closeObject();
 		}
