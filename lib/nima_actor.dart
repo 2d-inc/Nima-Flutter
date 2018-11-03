@@ -28,8 +28,9 @@ class NimaActor extends LeafRenderObjectWidget
 	final bool paused;
 	final NimaAnimationCompleted completed;
 	final NimaController controller;
+	final bool clip;
 
-	NimaActor(this.filename, {this.animation, this.fit, this.mixSeconds = 0.2, this.alignment = Alignment.center, this.paused = false, this.completed, this.controller});
+	NimaActor(this.filename, {this.animation, this.fit, this.mixSeconds = 0.2, this.clip=true, this.alignment = Alignment.center, this.paused = false, this.completed, this.controller});
 
 	@override
 	RenderObject createRenderObject(BuildContext context) 
@@ -41,7 +42,8 @@ class NimaActor extends LeafRenderObjectWidget
 											..completed = completed
 											..mixSeconds = mixSeconds
 											..controller = controller
-											..isPlaying = !paused && animation != null;
+											..isPlaying = !paused && animation != null
+											..clip = clip;
 	}
 
 	@override
@@ -54,7 +56,8 @@ class NimaActor extends LeafRenderObjectWidget
 									..completed = completed
 									..mixSeconds = mixSeconds
 									..controller = controller
-									..isPlaying = !paused && animation != null;
+									..isPlaying = !paused && animation != null
+									..clip = clip;
 	}
 }
 
@@ -76,6 +79,7 @@ class NimaActorRenderObject extends RenderBox
 	double _lastFrameTime = 0.0;
 	NimaAnimationCompleted _completedCallback;
 	NimaController _controller;
+	bool _isFrameScheduled = false;
 
 	List<NimaAnimationLayer> _animationLayers = new List<NimaAnimationLayer>();
 	bool _isPlaying;
@@ -89,6 +93,15 @@ class NimaActorRenderObject extends RenderBox
 		if(_completedCallback != value)
 		{
 			_completedCallback = value;
+		}
+	}
+
+	void scheduleFrame()
+	{
+		if(!_isFrameScheduled)
+		{
+			_isFrameScheduled = true;
+			SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
 		}
 	}
 	
@@ -113,8 +126,20 @@ class NimaActorRenderObject extends RenderBox
 		_isPlaying = value;
 		if(_isPlaying)
 		{
-			SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
+			scheduleFrame();
 		}
+	}
+
+	bool _clip = true;
+	bool get clip => _clip;
+	set clip(bool value)
+	{
+		if(_clip == value)
+		{
+			return;
+		}
+		_clip = value;
+		markNeedsPaint();
 	}
 
 	String get animationName => _animationName;
@@ -238,11 +263,11 @@ class NimaActorRenderObject extends RenderBox
 	void beginFrame(Duration timeStamp)
 	{
 		final double t = timeStamp.inMicroseconds / Duration.microsecondsPerMillisecond / 1000.0;
-		
+		_isFrameScheduled = false;
 		if(_lastFrameTime == 0 || _actor == null)
 		{
 			_lastFrameTime = t;
-			SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
+			scheduleFrame();
 			return;
 		}
 
@@ -305,7 +330,7 @@ class NimaActorRenderObject extends RenderBox
 
 		if(_isPlaying)
 		{
-			SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
+			scheduleFrame();
 		}
 		
 		_actor.advance(elapsedSeconds);
@@ -328,8 +353,11 @@ class NimaActorRenderObject extends RenderBox
 
 			double scaleX = 1.0, scaleY = 1.0;
 
-			canvas.save();		
-			canvas.clipRect(offset & size);
+			canvas.save();	
+			if(_clip)
+			{	
+				canvas.clipRect(offset & size);
+			}
 			
 			switch(_fit)
 			{
