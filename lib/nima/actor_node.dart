@@ -24,6 +24,7 @@ class ActorNode extends ActorComponent
 	bool _renderCollapsed = false;
 
 	List<ActorConstraint> _constraints;
+	List<ActorConstraint> _peerConstraints;
 
 	static const int TransformDirty = 1<<0;
 	static const int WorldTransformDirty = 1<<1;
@@ -322,6 +323,22 @@ class ActorNode extends ActorComponent
 		_constraints.add(constraint);
 		return true;
 	}
+
+	bool addPeerConstraint(ActorConstraint constraint)
+	{
+		if(_peerConstraints == null)
+		{
+			_peerConstraints = new List<ActorConstraint>();
+		}
+		if(_peerConstraints.contains(constraint))
+		{
+			return false;
+		}
+		_peerConstraints.add(constraint);
+		return true;
+	}
+
+	List<ActorConstraint> get allConstraints => (_constraints == null ? _peerConstraints : _peerConstraints == null ? _constraints : _constraints + _peerConstraints) ?? <ActorConstraint>[];
 
 	void update(int dirt)
 	{
