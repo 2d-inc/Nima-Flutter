@@ -1,4 +1,7 @@
 import "package:flutter/services.dart" show rootBundle;
+import "nima/math/vec2d.dart";
+import "nima/actor_bone.dart";
+import "nima/actor_jelly_bone.dart";
 import "nima/actor.dart";
 import "nima/actor_image.dart";
 import "nima/actor_component.dart";
@@ -276,6 +279,37 @@ class FlutterActor extends Actor
 		{
 			image.draw(canvas, opacity);
 		}
+
+		// Debug draw bones.
+		// for(ActorComponent component in components)
+		// {
+		// 	if(component is ActorBone)
+		// 	{
+		// 		ui.Paint paint = new ui.Paint()
+		// 							..color = new ui.Color.fromRGBO(255, 0, 0, 1.0)
+		// 							..strokeWidth = 5.0
+		// 							..style = ui.PaintingStyle.stroke;
+		// 		ui.Path p = new ui.Path();
+		// 		p.moveTo(component.worldTransform[4], component.worldTransform[5]);
+		// 		Vec2D tipWorld = new Vec2D();
+		// 		component.getTipWorldTranslation(tipWorld);
+		// 		p.lineTo(tipWorld[0], tipWorld[1]);
+		// 		canvas.drawPath(p, paint);
+		// 	}
+		// 	if(component is ActorJellyBone)
+		// 	{
+		// 		ui.Paint paint = new ui.Paint()
+		// 							..color = new ui.Color.fromRGBO(0, 255, 255, 1.0)
+		// 							..strokeWidth = 8.0
+		// 							..style = ui.PaintingStyle.stroke;
+		// 		ui.Path p = new ui.Path();
+		// 		p.moveTo(component.worldTransform[4], component.worldTransform[5]);
+		// 		Vec2D tipWorld = new Vec2D();
+		// 		component.getTipWorldTranslation(tipWorld);
+		// 		p.lineTo(tipWorld[0], tipWorld[1]);
+		// 		canvas.drawPath(p, paint);
+		// 	}
+		// }
 	}
 
 	set isInstance(bool val)

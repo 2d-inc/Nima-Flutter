@@ -404,11 +404,9 @@ class JellyComponent extends ActorComponent
 
 				Vec2D.transformMat2(d1, d1, firstBone.worldTransform);
 				Vec2D.transformMat2(d2, d2, bone.worldTransform);
-
 				Vec2D sum = Vec2D.add(new Vec2D(), d1, d2);
-				Vec2D.negate(sum, sum);
-				Vec2D.transformMat2(_outDirection, sum, inverseWorld);
-				Vec2D.normalize(_outDirection, _outDirection);
+				Vec2D negativeSum = Vec2D.negate(new Vec2D(), sum);
+				Vec2D.transformMat2(_outDirection, negativeSum, inverseWorld);
 			}
 			Vec2D.normalize(_outDirection, _outDirection);
 			Vec2D scaledOut = Vec2D.scale(new Vec2D(), _outDirection, _easeOut*bone.length*CurveConstant);
@@ -428,5 +426,6 @@ class JellyComponent extends ActorComponent
 		}
 
 		updateJellies();
+
 	}
 }
