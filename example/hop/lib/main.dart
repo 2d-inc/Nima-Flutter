@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:nima/nima_actor.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      theme: new ThemeData(
-        primarySwatch: Colors.blue
-      ),
-      home: new MyHomePage(title: 'Flutter + Nima'),
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: MyHomePage(title: 'Flutter + Nima'),
     );
   }
 }
@@ -21,7 +19,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -29,63 +27,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-		backgroundColor: Colors.grey,
-		appBar: new AppBar(
-			title: new Text(widget.title)
-		),
-		body: new Stack(
-			children: <Widget>[
-			  	new Positioned.fill(
-					child: NimaActor("assets/Hop.nima", alignment:Alignment.center, fit:BoxFit.contain, animation:_animationName, mixSeconds:0.5, completed:(String animationName)
-					{
-						setState(()
-						{
-							// Return to idle.
-							_animationName = "idle";
-						});
-					})
-				),
-				new Positioned.fill(
-					child: new Row(
-						crossAxisAlignment: CrossAxisAlignment.end,
-						mainAxisAlignment: MainAxisAlignment.center,
-						children: <Widget>[
-						  new Container(
-								margin: const EdgeInsets.all(5.0), 
-								child: new FlatButton(
-									child: new Text("Jump"), 
-									textColor: Colors.white, 
-									color: Colors.blue, 
-									onPressed:() 
-									{
-										setState(() 
-										{
-											_animationName = "jump";
-										});
-									}
-								)
-							),
-						  new Container(
-								margin: const EdgeInsets.all(5.0), 
-								child: new FlatButton(
-									child: new Text("Attack"), 
-									textColor: Colors.white, 
-									color: Colors.blue, 
-									onPressed:() 
-									{
-										setState(() 
-										{
-											_animationName = "attack";
-										});
-									}
-								)
-							),
-				  		],
-					)
-				)
-		  ]
-      )
-    );
+    return Scaffold(
+        backgroundColor: Colors.grey,
+        appBar: AppBar(title: Text(widget.title)),
+        body: Stack(children: <Widget>[
+          Positioned.fill(
+              child: NimaActor("assets/Hop.nima",
+                  alignment: Alignment.center,
+                  fit: BoxFit.contain,
+                  animation: _animationName,
+                  mixSeconds: 0.5, completed: (String animationName) {
+            setState(() {
+              // Return to idle.
+              _animationName = "idle";
+            });
+          })),
+          Positioned.fill(
+              child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: FlatButton(
+                      child: Text("Jump"),
+                      textColor: Colors.white,
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          _animationName = "jump";
+                        });
+                      })),
+              Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: FlatButton(
+                      child: Text("Attack"),
+                      textColor: Colors.white,
+                      color: Colors.blue,
+                      onPressed: () {
+                        setState(() {
+                          _animationName = "attack";
+                        });
+                      })),
+            ],
+          ))
+        ]));
   }
 }
