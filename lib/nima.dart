@@ -199,12 +199,12 @@ class FlutterActor extends Actor {
 
     // Support for older runtimes where atlases were always stored externally.
     if (atlases == null) {
+      int dotIdx = filename.indexOf(".");
+      dotIdx = dotIdx > -1 ? dotIdx : filename.length;
+      filename = filename.substring(0, dotIdx);
       for (int i = 0; i < this.texturesUsed; i++) {
         String atlasFilename;
         if (this.texturesUsed == 1) {
-          int dotIdx = filename.indexOf(".");
-          dotIdx = dotIdx > -1 ? dotIdx : filename.length;
-          filename = filename.substring(0, dotIdx);
           atlasFilename = filename + ".png";
         } else {
           atlasFilename = filename + i.toString() + ".png";
