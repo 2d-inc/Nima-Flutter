@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:nima/nima.dart';
 import 'package:nima/nima/math/aabb.dart';
 import 'package:nima/nima/animation/actor_animation.dart';
@@ -66,6 +67,11 @@ class NimaActor extends LeafRenderObjectWidget {
       ..isPlaying = !paused && animation != null
       ..clip = clip;
   }
+
+  @override
+  void didUnmountRenderObject(covariant NimaActorRenderObject renderObject) {
+    renderObject.dispose();
+  }
 }
 
 class NimaAnimationLayer {
@@ -81,10 +87,10 @@ class NimaActorRenderObject extends RenderBox {
   Alignment _alignment;
   String _animationName;
   double _mixSeconds = 0.2;
+  int _frameCallbackID;
   double _lastFrameTime = 0.0;
   NimaAnimationCompleted _completedCallback;
   NimaController _controller;
-  bool _isFrameScheduled = false;
 
   List<NimaAnimationLayer> _animationLayers = List<NimaAnimationLayer>();
   bool _isPlaying;
@@ -92,17 +98,41 @@ class NimaActorRenderObject extends RenderBox {
   FlutterActor _actor;
   AABB _setupAABB;
 
+  void dispose() {
+    _isPlaying = false;
+    _updatePlayState();
+    _controller = null;
+  }
+
+  @override
+  void detach() {
+    super.detach();
+    dispose();
+  }
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    _updatePlayState();
+  }
+
+  void _updatePlayState() {
+    if (_isPlaying && attached) {
+      _frameCallbackID ??=
+          SchedulerBinding.instance.scheduleFrameCallback(_beginFrame);
+    } else {
+      if (_frameCallbackID != null) {
+        SchedulerBinding.instance.cancelFrameCallbackWithId(_frameCallbackID);
+        _frameCallbackID = null;
+      }
+      _lastFrameTime = 0.0;
+    }
+  }
+
   NimaAnimationCompleted get completed => _completedCallback;
   set completed(NimaAnimationCompleted value) {
     if (_completedCallback != value) {
       _completedCallback = value;
-    }
-  }
-
-  void scheduleFrame() {
-    if (!_isFrameScheduled) {
-      _isFrameScheduled = true;
-      SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
     }
   }
 
@@ -121,9 +151,7 @@ class NimaActorRenderObject extends RenderBox {
       return;
     }
     _isPlaying = value;
-    if (_isPlaying) {
-      scheduleFrame();
-    }
+    _updatePlayState();
   }
 
   bool _clip = true;
@@ -233,19 +261,27 @@ class NimaActorRenderObject extends RenderBox {
     super.performLayout();
   }
 
-  void beginFrame(Duration timeStamp) {
+  void _beginFrame(Duration timeStamp) {
+    _frameCallbackID = null;
     final double t =
         timeStamp.inMicroseconds / Duration.microsecondsPerMillisecond / 1000.0;
-    _isFrameScheduled = false;
-    if (_lastFrameTime == 0 || _actor == null) {
+    if (_lastFrameTime == 0) {
       _lastFrameTime = t;
-      scheduleFrame();
+      _updatePlayState();
       return;
     }
 
     double elapsedSeconds = t - _lastFrameTime;
     _lastFrameTime = t;
 
+    if (_advance(elapsedSeconds)) {
+      _updatePlayState();
+    }
+
+    markNeedsPaint();
+  }
+
+  bool _advance(double elapsedSeconds) {
     int lastFullyMixed = -1;
     double lastMix = 0.0;
 
@@ -295,13 +331,9 @@ class NimaActorRenderObject extends RenderBox {
       _controller.advance(_actor, elapsedSeconds);
     }
 
-    if (_isPlaying) {
-      scheduleFrame();
-    }
-
     _actor.advance(elapsedSeconds);
 
-    markNeedsPaint();
+    return _isPlaying;
   }
 
   @override
