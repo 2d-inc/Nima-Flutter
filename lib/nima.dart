@@ -63,7 +63,7 @@ class FlutterActorImage extends ActorImage {
     _vertexBuffer = makeVertexPositionBuffer();
     _uvBuffer = makeVertexUVBuffer();
     _indices =
-        Int32List.fromList(triangles); // nima runtime loads 16 bit indices
+        Uint16List.fromList(triangles); // nima runtime loads 16 bit indices
     updateVertexUVBuffer(_uvBuffer);
     int count = vertexCount;
     int idx = 0;
