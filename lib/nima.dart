@@ -17,7 +17,7 @@ class FlutterActorImage extends ActorImage {
   Float32List _uvBuffer;
   ui.Paint _paint;
   ui.Vertices _canvasVertices;
-  Int32List _indices;
+  Int16List _indices;
   DrawCallback onDraw;
 
   final Float64List _identityMatrix = Float64List.fromList(<double>[
