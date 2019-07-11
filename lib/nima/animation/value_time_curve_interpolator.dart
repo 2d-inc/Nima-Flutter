@@ -1,6 +1,7 @@
+import "dart:math";
+
 import "../readers/stream_reader.dart";
 import "keyframe.dart";
-import "dart:math";
 
 // AE style curve interpolation
 class ValueTimeCurveInterpolator extends KeyFrameInterpolator {
@@ -13,15 +14,17 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator {
   double get inValue => _inValue;
   double get outFactor => _outFactor;
   double get outValue => _outValue;
-
+  ValueTimeCurveInterpolator();
   ValueTimeCurveInterpolator.fromValues(
       this._inFactor, this._inValue, this._outFactor, this._outValue);
-  ValueTimeCurveInterpolator();
 
+  @override
   bool setNextFrame(KeyFrameWithInterpolation frame, KeyFrame nextFrame) {
     // This frame is a hold, return false to remove the interpolator.
-    // We store it in the first place as when it gets called as the nextFrame parameter (in a previous call)
-    // we still read out the in factor and in value (see below where nextInValue and nextInFactor are defined).
+    // We store it in the first place as when it gets called as the
+    // nextFrame parameter (in a previous call) we still read out the
+    // in factor and in value (see below where nextInValue and nextInFactor
+    //  are defined).
     if (frame.interpolationType == InterpolationTypes.Hold) {
       return false;
     }
@@ -33,7 +36,8 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator {
       return false;
     }
 
-    // We are not gauranteed to have a next interpolator (usually when the next keyframe is linear).
+    // We are not gauranteed to have a next interpolator
+    // (usually when the next keyframe is linear).
     ValueTimeCurveInterpolator nextInterpolator;
 
     double timeRange = next.time - ourFrame.time;
@@ -42,9 +46,11 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator {
     double nextInValue = 0.0;
     double nextInFactor = 0.0;
 
-    // Get the invalue and infactor from the next interpolator (this is where hold keyframes get their interpolator values processed too).
+    // Get the invalue and infactor from the next interpolator
+    // (this is where hold keyframes get their interpolator values
+    //  processed too).
     if (next.interpolator is ValueTimeCurveInterpolator) {
-      nextInterpolator = next.interpolator;
+      nextInterpolator = next.interpolator as ValueTimeCurveInterpolator;
       nextInValue = nextInterpolator._inValue;
       nextInFactor = nextInterpolator._inFactor;
     } else {
@@ -55,10 +61,8 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator {
     double inTime = next.time - timeRange * nextInFactor;
 
     // Finally we can generate the curve.
-
     initializeCurve(ourFrame.time, ourFrame.value, outTime, _outValue, inTime,
         nextInValue, next.time, next.value);
-    //this._Curve = new BezierAnimationCurve([ourFrame.time, ourFrame.Value], [outTime, _outValue], [inTime, nextInValue], [next.time, next.Value]);
     return true;
   }
 
@@ -132,9 +136,9 @@ class ValueTimeCurveInterpolator extends KeyFrameInterpolator {
 
   double cubicRoot(double v) {
     if (v < 0.0) {
-      return -pow(-v, 1.0 / 3.0);
+      return -pow(-v, 1.0 / 3.0).toDouble();
     }
-    return pow(v, 1.0 / 3.0);
+    return pow(v, 1.0 / 3.0).toDouble();
   }
 
   // http://stackoverflow.com/questions/27176423/function-to-solve-cubic-equation-analytically

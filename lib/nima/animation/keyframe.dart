@@ -291,15 +291,18 @@ class KeyFrameStringProperty extends KeyFrame {
     return frame;
   }
 
+  @override
   void setNext(KeyFrame frame) {
     // Do nothing.
   }
 
+  @override
   void applyInterpolation(
       ActorComponent component, double time, KeyFrame toFrame, double mix) {
     apply(component, mix);
   }
 
+  @override
   void apply(ActorComponent component, double mix) {
     // CustomStringProperty prop = component as CustomStringProperty;
     // prop.value = _value;
@@ -317,15 +320,18 @@ class KeyFrameBooleanProperty extends KeyFrame {
     return frame;
   }
 
+  @override
   void setNext(KeyFrame frame) {
     // Do nothing.
   }
 
+  @override
   void applyInterpolation(
       ActorComponent component, double time, KeyFrame toFrame, double mix) {
     apply(component, mix);
   }
 
+  @override
   void apply(ActorComponent component, double mix) {
     // CustomBooleanProperty prop = component as CustomBooleanProperty;
     // prop.value = _value;
@@ -343,15 +349,18 @@ class KeyFrameCollisionEnabledProperty extends KeyFrame {
     return frame;
   }
 
+  @override
   void setNext(KeyFrame frame) {
     // Do nothing.
   }
 
+  @override
   void applyInterpolation(
       ActorComponent component, double time, KeyFrame toFrame, double mix) {
     apply(component, mix);
   }
 
+  @override
   void apply(ActorComponent component, double mix) {
     // ActorCollider collider = component as ActorCollider;
     // collider.isCollisionEnabled = _value;
@@ -367,6 +376,7 @@ class KeyFramePosX extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorNode node = component as ActorNode;
     node.x = node.x * (1.0 - mix) + value * mix;
@@ -382,6 +392,7 @@ class KeyFramePosY extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorNode node = component as ActorNode;
     node.y = node.y * (1.0 - mix) + value * mix;
@@ -397,6 +408,7 @@ class KeyFrameScaleX extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorNode node = component as ActorNode;
     node.scaleX = node.scaleX * (1.0 - mix) + value * mix;
@@ -412,6 +424,7 @@ class KeyFrameScaleY extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorNode node = component as ActorNode;
     node.scaleY = node.scaleY * (1.0 - mix) + value * mix;
@@ -427,6 +440,7 @@ class KeyFrameRotation extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorNode node = component as ActorNode;
     node.rotation = node.rotation * (1.0 - mix) + value * mix;
@@ -442,6 +456,7 @@ class KeyFrameOpacity extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorNode node = component as ActorNode;
     node.opacity = node.opacity * (1.0 - mix) + value * mix;
@@ -457,6 +472,7 @@ class KeyFrameLength extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorBoneBase bone = component as ActorBoneBase;
     if (bone == null) {
@@ -475,6 +491,7 @@ class KeyFrameConstraintStrength extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorConstraint constraint = component as ActorConstraint;
     constraint.strength = constraint.strength * (1.0 - mix) + value * mix;
@@ -511,19 +528,22 @@ class KeyFrameDrawOrder extends KeyFrame {
     return frame;
   }
 
+  @override
   void setNext(KeyFrame frame) {
     // Do nothing.
   }
 
+  @override
   void applyInterpolation(
       ActorComponent component, double time, KeyFrame toFrame, double mix) {
     apply(component, mix);
   }
 
+  @override
   void apply(ActorComponent component, double mix) {
     Actor actor = component.actor;
 
-    for (DrawOrderIndex doi in _orderedNodes) {
+    for (final DrawOrderIndex doi in _orderedNodes) {
       ActorImage actorImage = actor[doi.nodeIdx] as ActorImage;
       if (actorImage != null) {
         actorImage.drawOrder = doi.order;
@@ -572,10 +592,12 @@ class KeyFrameVertexDeform extends KeyFrameWithInterpolation {
     }
   }
 
+  @override
   void setNext(KeyFrame frame) {
     // Do nothing.
   }
 
+  @override
   void applyInterpolation(
       ActorComponent component, double time, KeyFrame toFrame, double mix) {
     ActorImage imageNode = component as ActorImage;
@@ -601,6 +623,7 @@ class KeyFrameVertexDeform extends KeyFrameWithInterpolation {
     imageNode.isVertexDeformDirty = true;
   }
 
+  @override
   void apply(ActorComponent component, double mix) {
     ActorImage imageNode = component as ActorImage;
     int l = _vertices.length;
@@ -629,13 +652,16 @@ class KeyFrameTrigger extends KeyFrame {
     return frame;
   }
 
+  @override
   void setNext(KeyFrame frame) {
     // Do nothing.
   }
 
+  @override
   void applyInterpolation(
       ActorComponent component, double time, KeyFrame toFrame, double mix) {}
 
+  @override
   void apply(ActorComponent component, double mix) {}
 }
 
@@ -651,15 +677,18 @@ class KeyFrameActiveChild extends KeyFrame {
     return frame;
   }
 
+  @override
   void setNext(KeyFrame frame) {
     // No Interpolation
   }
 
+  @override
   void applyInterpolation(
       ActorComponent component, double time, KeyFrame toFrame, double mix) {
     apply(component, mix);
   }
 
+  @override
   void apply(ActorComponent component, double mix) {
     ActorNodeSolo soloNode = component as ActorNodeSolo;
     soloNode.activeChildIndex = _value;
@@ -675,6 +704,7 @@ class KeyFrameSequence extends KeyFrameNumeric {
     return null;
   }
 
+  @override
   void setValue(ActorComponent component, double value, double mix) {
     ActorImage node = component as ActorImage;
     int frameIndex = value.floor() % node.sequenceFrames.length;

@@ -51,8 +51,9 @@ class ActorRotationConstraint extends ActorTargetedConstraint {
     return component;
   }
 
+  @override
   void constrain(ActorNode node) {
-    ActorNode target = this.target;
+    ActorNode target = this.target as ActorNode;
     ActorNode grandParent = parent.parent;
 
     Mat2D transformA = parent.worldTransform;
@@ -92,7 +93,8 @@ class ActorRotationConstraint extends ActorTargetedConstraint {
 
       if (_destSpace == TransformSpace.Local) {
         // Destination space is in parent transform coordinates.
-        // Recompose the parent local transform and get it in world, then decompose the world for interpolation.
+        // Recompose the parent local transform and get it in world,
+        // then decompose the world for interpolation.
         if (grandParent != null) {
           Mat2D.compose(transformB, _componentsB);
           Mat2D.multiply(transformB, grandParent.worldTransform, transformB);
@@ -145,6 +147,7 @@ class ActorRotationConstraint extends ActorTargetedConstraint {
     Mat2D.compose(parent.worldTransform, _componentsB);
   }
 
+  @override
   ActorComponent makeInstance(Actor resetActor) {
     ActorRotationConstraint instance = ActorRotationConstraint();
     instance.copyRotationConstraint(this, resetActor);
@@ -167,6 +170,8 @@ class ActorRotationConstraint extends ActorTargetedConstraint {
     _minMaxSpace = node._minMaxSpace;
   }
 
+  @override
   void update(int dirt) {}
+  @override
   void completeResolve() {}
 }

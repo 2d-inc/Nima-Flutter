@@ -1,11 +1,9 @@
-import 'dart:typed_data';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:nima/nima.dart';
 import 'package:nima/nima/math/aabb.dart';
 import 'package:nima/nima/animation/actor_animation.dart';
-import 'dart:math';
 import 'package:flutter/scheduler.dart';
 import 'package:nima/nima/math/mat2d.dart';
 import 'package:nima/nima/math/vec2d.dart';
@@ -29,7 +27,7 @@ class NimaActor extends LeafRenderObjectWidget {
   final NimaController controller;
   final bool clip;
 
-  NimaActor(this.filename,
+  const NimaActor(this.filename,
       {this.animation,
       this.fit,
       this.mixSeconds = 0.2,
@@ -92,7 +90,7 @@ class NimaActorRenderObject extends RenderBox {
   NimaAnimationCompleted _completedCallback;
   NimaController _controller;
 
-  List<NimaAnimationLayer> _animationLayers = List<NimaAnimationLayer>();
+  final List<NimaAnimationLayer> _animationLayers = <NimaAnimationLayer>[];
   bool _isPlaying;
 
   FlutterActor _actor;
@@ -174,7 +172,7 @@ class NimaActorRenderObject extends RenderBox {
   }
 
   void _updateAnimation({bool onlyWhenMissing = false}) {
-    if (onlyWhenMissing && _animationLayers.length != 0) {
+    if (onlyWhenMissing && _animationLayers.isNotEmpty) {
       return;
     }
     if (_animationName == null || _actor == null) {
@@ -236,8 +234,8 @@ class NimaActorRenderObject extends RenderBox {
     });
   }
 
-  AlignmentGeometry get alignment => _alignment;
-  set alignment(AlignmentGeometry value) {
+  Alignment get alignment => _alignment;
+  set alignment(Alignment value) {
     if (value == _alignment) {
       return;
     }
@@ -254,11 +252,6 @@ class NimaActorRenderObject extends RenderBox {
   @override
   void performResize() {
     size = constraints.biggest;
-  }
-
-  @override
-  void performLayout() {
-    super.performLayout();
   }
 
   void _beginFrame(Duration timeStamp) {
@@ -285,7 +278,7 @@ class NimaActorRenderObject extends RenderBox {
     int lastFullyMixed = -1;
     double lastMix = 0.0;
 
-    List<NimaAnimationLayer> completed = List<NimaAnimationLayer>();
+    List<NimaAnimationLayer> completed = <NimaAnimationLayer>[];
 
     for (int i = 0; i < _animationLayers.length; i++) {
       NimaAnimationLayer layer = _animationLayers[i];
@@ -320,7 +313,7 @@ class NimaActorRenderObject extends RenderBox {
       _animationLayers.removeAt(0);
     }
 
-    for (NimaAnimationLayer animation in completed) {
+    for (final NimaAnimationLayer animation in completed) {
       _animationLayers.remove(animation);
       if (_completedCallback != null) {
         _completedCallback(animation.name);
@@ -344,9 +337,10 @@ class NimaActorRenderObject extends RenderBox {
       AABB bounds = _setupAABB;
       double contentHeight = bounds[3] - bounds[1];
       double contentWidth = bounds[2] - bounds[0];
-      double x =
-          -bounds[0] - contentWidth / 2.0 - (_alignment.x * contentWidth / 2.0);
-      double y = -bounds[1] -
+      double x = -1 * bounds[0] -
+          contentWidth / 2.0 -
+          (_alignment.x * contentWidth / 2.0);
+      double y = -1 * bounds[1] -
           contentHeight / 2.0 +
           (_alignment.y * contentHeight / 2.0);
 

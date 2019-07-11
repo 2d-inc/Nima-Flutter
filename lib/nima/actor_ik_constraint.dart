@@ -65,7 +65,7 @@ class ActorIKConstraint extends ActorTargetedConstraint {
     int idx = count - 1;
     while (end != null && end != start.parent) {
       BoneChain bc = BoneChain();
-      bc.bone = end;
+      bc.bone = end as ActorBone;
       bc.angle = 0.0;
       bc.included = allIn;
       bc.transformComponents = TransformComponents();
@@ -76,8 +76,8 @@ class ActorIKConstraint extends ActorTargetedConstraint {
     }
 
     // Make sure bones are good.
-    _boneData = List<BoneChain>();
-    for (InfluencedBone bone in _influencedBones) {
+    _boneData = <BoneChain>[];
+    for (final InfluencedBone bone in _influencedBones) {
       BoneChain item = _fkChain.firstWhere(
           (chainItem) => chainItem.bone == bone.bone,
           orElse: () => null);
@@ -97,7 +97,7 @@ class ActorIKConstraint extends ActorTargetedConstraint {
     }
 
     // Finally mark dependencies.
-    for (InfluencedBone bone in _influencedBones) {
+    for (final InfluencedBone bone in _influencedBones) {
       // Don't mark dependency on parent as ActorComponent already does this.
       if (bone.bone == parent) {
         continue;
@@ -110,7 +110,8 @@ class ActorIKConstraint extends ActorTargetedConstraint {
       actor.addDependency(this, target);
     }
 
-    // All the first level children of the influenced bones should depend on the final bone.
+    // All the first level children of the influenced bones
+    // should depend on the final bone.
     BoneChain tip = _fkChain[_fkChain.length - 1];
     for (BoneChain fk in _fkChain) {
       if (fk == tip) {
@@ -118,7 +119,7 @@ class ActorIKConstraint extends ActorTargetedConstraint {
       }
 
       ActorBone bone = fk.bone;
-      for (ActorNode node in bone.children) {
+      for (final ActorNode node in bone.children) {
         BoneChain item = _fkChain.firstWhere(
             (chainItem) => chainItem.bone == node,
             orElse: () => null);
@@ -146,8 +147,8 @@ class ActorIKConstraint extends ActorTargetedConstraint {
 
       for (int i = 0; i < numInfluencedBones; i++) {
         InfluencedBone ib = InfluencedBone();
-        ib.boneIdx = reader.readId(
-            ""); // No need for a label here since we're removing items from the array.
+        ib.boneIdx = reader.readId("");
+        // No need for a label here since we're removing items from the array.
         component._influencedBones[i] = ib;
       }
     }
@@ -155,20 +156,21 @@ class ActorIKConstraint extends ActorTargetedConstraint {
     return component;
   }
 
+  @override
   void constrain(ActorNode node) {
-    ActorNode target = this.target;
+    ActorNode target = this.target as ActorNode;
     if (target == null) {
       return;
     }
     Vec2D worldTargetTranslation = Vec2D();
     target.getWorldTranslation(worldTargetTranslation);
 
-    if (_influencedBones.length == 0) {
+    if (_influencedBones.isEmpty) {
       return;
     }
 
     // Decompose the chain.
-    for (BoneChain item in _fkChain) {
+    for (final BoneChain item in _fkChain) {
       ActorBone bone = item.bone;
       Mat2D parentWorld = bone.parent.worldTransform;
       Mat2D.invert(item.parentWorldInverse, parentWorld);
@@ -357,5 +359,6 @@ class ActorIKConstraint extends ActorTargetedConstraint {
     }
   }
 
+  @override
   void update(int dirt) {}
 }

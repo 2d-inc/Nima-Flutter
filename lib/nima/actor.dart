@@ -115,7 +115,7 @@ class Actor {
   bool addDependency(ActorComponent a, ActorComponent b) {
     List<ActorComponent> dependents = b.dependents;
     if (dependents == null) {
-      b.dependents = dependents = List<ActorComponent>();
+      b.dependents = dependents = <ActorComponent>[];
     }
     if (dependents.contains(a)) {
       return false;
@@ -128,7 +128,7 @@ class Actor {
     DependencySorter sorter = DependencySorter();
     _dependencyOrder = sorter.sort(_root);
     int graphOrder = 0;
-    for (ActorComponent component in _dependencyOrder) {
+    for (final ActorComponent component in _dependencyOrder) {
       component.graphOrder = graphOrder++;
       component.dirtMask = 255;
     }
@@ -149,8 +149,9 @@ class Actor {
 
     component.onDirty(dirt);
 
-    // If the order of this component is less than the current dirt depth, update the dirt depth
-    // so that the update loop can break out early and re-run (something up the tree is dirty).
+    // If the order of this component is less than the current dirt depth, 
+	// update the dirt depth so that the update loop can break out early 
+	// and re-run (something up the tree is dirty).
     if (component.graphOrder < _dirtDepth) {
       _dirtDepth = component.graphOrder;
     }
@@ -377,8 +378,8 @@ class Actor {
     if (N != 78 || I != 73 || M != 77 || A != 65) {
       Uint8List byteList = data.buffer.asUint8List();
       String stringData = String.fromCharCodes(byteList);
-      var jsonActor = jsonDecode(stringData);
-      Map jsonObject = Map();
+      dynamic jsonActor = jsonDecode(stringData);
+      Map jsonObject = <dynamic, dynamic>{};
       jsonObject["container"] = jsonActor;
       inputData = jsonObject; // Override.
     }
@@ -639,5 +640,5 @@ class Actor {
     block.closeArray();
   }
 
-  List get atlases => this._atlases;
+  List get atlases => _atlases;
 }

@@ -10,13 +10,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'JSON Reader Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: MyHomePage(title: 'Nima-Flutter with JSON'),
+      home: const MyHomePage(title: 'Nima-Flutter with JSON'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  const MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
@@ -24,7 +24,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _animationName = "Constraint";
+  final String _animationName = "Constraint";
 
   @override
   Widget build(BuildContext context) {

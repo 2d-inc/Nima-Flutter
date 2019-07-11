@@ -139,7 +139,7 @@ abstract class BinaryReader implements StreamReader {
 
   @override
   int readVersion() {
-    return this.readUint32();
+    return readUint32();
   }
 
   @override
@@ -173,22 +173,22 @@ abstract class BinaryReader implements StreamReader {
   }
 
   @override
-  openArray(String label) {
+  void openArray(String label) {
     /* NOP */
   }
 
   @override
-  closeArray() {
+  void closeArray() {
     /* NOP */
   }
 
   @override
-  openObject(String label) {
+  void openObject(String label) {
     /* NOP */
   }
 
   @override
-  closeObject() {
+  void closeObject() {
     /* NOP */
   }
 
