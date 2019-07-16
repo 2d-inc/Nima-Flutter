@@ -1,6 +1,6 @@
 name: nima
 description: Nima runtime for flutter.
-version: 1.0.4
+version: 1.0.5
 author: "2Dimensions Team <info@2dimensions.com>"
 homepage: https://github.com/2d-inc/Nima-Flutter
 environment:

@@ -1,3 +1,7 @@
+## [1.0.5] - 2019-07-16 08:50:43
+
+* Prevent advancing a null actor, which can occur due to a race condition when loading the Nima file.
+
 ## [1.0.4] - 2019-07-11 10:00:50
 
 * Fix breaking index buffer format change (from Int32List to Uint16List).

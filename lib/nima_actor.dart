@@ -275,6 +275,9 @@ class NimaActorRenderObject extends RenderBox {
   }
 
   bool _advance(double elapsedSeconds) {
+    if (_actor == null) {
+      return _isPlaying;
+    }
     int lastFullyMixed = -1;
     double lastMix = 0.0;
 
