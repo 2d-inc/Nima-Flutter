@@ -275,6 +275,12 @@ class NimaActorRenderObject extends RenderBox {
   }
 
   bool _advance(double elapsedSeconds) {
+    // _actor might not immediately be available, because it is asynchronously init'ed in
+    // `set filename(String value)`
+    if(_actor == null) {
+      return _isPlaying;
+    }
+
     int lastFullyMixed = -1;
     double lastMix = 0.0;
 
